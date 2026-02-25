@@ -1,0 +1,126 @@
+---
+// RSS Feeds Directory Component
+const feedCategories = [
+  {
+    name: 'Local News',
+    icon: '📰',
+    feeds: [
+      { name: 'Wilkes Journal-Patriot', url: 'https://www.journalpatriot.com/rss', status: 'active' },
+      { name: 'Wilkes Record', url: 'https://www.thewilkesrecord.com/rss', status: 'active' },
+      { name: 'WXII 12 Wilkes', url: 'https://www.wxii12.com/wilkes-county/rss', status: 'limited' },
+    ]
+  },
+  {
+    name: 'Government',
+    icon: '🏛️',
+    feeds: [
+      { name: 'Wilkes County', url: 'https://www.wilkescounty.net/RSSFeed.aspx', status: 'active' },
+      { name: 'North Wilkesboro', url: 'https://www.north-wilkesboro.com/rss.aspx', status: 'active' },
+      { name: 'NC Legislature', url: 'https://www.ncleg.gov/rss', status: 'active' },
+    ]
+  },
+  {
+    name: 'Regional',
+    icon: '🏔️',
+    feeds: [
+      { name: 'Mountain Xpress', url: 'https://mountainx.com/feed/', status: 'active' },
+      { name: 'Watauga Democrat', url: 'https://www.wataugademocrat.com/rss', status: 'active' },
+      { name: 'Buncombe County', url: 'https://www.buncombenc.gov/rss.aspx', status: 'active' },
+    ]
+  },
+  {
+    name: 'State News',
+    icon: '🌟',
+    feeds: [
+      { name: 'WRAL', url: 'https://www.wral.com/rss', status: 'active' },
+      { name: 'ABC11', url: 'https://abc11.com/rss', status: 'active' },
+      { name: 'WFMY News 2', url: 'https://www.wfmynews2.com/rss', status: 'active' },
+    ]
+  },
+  {
+    name: 'Weather',
+    icon: '🌤️',
+    feeds: [
+      { name: 'NWS Greenville-Spartanburg', url: 'https://www.weather.gov/gsp/', status: 'active' },
+      { name: 'NWS Raleigh', url: 'https://www.weather.gov/rah/', status: 'active' },
+      { name: 'NWS National RSS', url: 'https://www.weather.gov/rss/', status: 'active' },
+    ]
+  },
+  {
+    name: 'Education',
+    icon: '🎓',
+    feeds: [
+      { name: 'Appalachian State', url: 'https://news.appstate.edu/rss', status: 'pending' },
+      { name: 'Wilkes County Schools', url: '#', status: 'pending' },
+    ]
+  }
+];
+---
+
+<section class="bg-white rounded-xl shadow-sm p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-xl font-bold text-gray-900 flex items-center">
+      <span class="w-1 h-6 bg-purple-500 mr-3 rounded"></span>
+      RSS Feed Directory
+    </h2>
+    
+    <a href="/feeds.opml" class="text-sm text-primary hover:underline">
+      Download OPML →
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {feedCategories.map(category => (
+      <div class="border border-gray-200 rounded-lg p-4">
+        <div class="flex items-center mb-3">
+          <span class="text-2xl mr-2">{category.icon}</span>
+          <h3 class="font-semibold text-gray-900">{category.name}</h3>
+        </div>
+
+        <ul class="space-y-2">
+          {category.feeds.map(feed => (
+            <li class="flex items-center justify-between">
+              <div class="flex items-center">
+                <span class={`w-2 h-2 rounded-full mr-2 ${
+                  feed.status === 'active' ? 'bg-green-500' : 
+                  feed.status === 'limited' ? 'bg-yellow-500' : 'bg-gray-300'
+                }`}></span>
+                <span class="text-sm text-gray-700">{feed.name}</span>
+              </div>
+              
+              <a 
+                href={feed.url} 
+                target="_blank" 
+                rel="noopener"
+                class="text-xs text-gray-400 hover:text-primary"
+                title="View RSS Feed"
+              >
+                RSS
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+    <h4 class="font-semibold text-gray-900 mb-2">📡 About Our Feeds</h4>
+    <p class="text-sm text-gray-600 mb-3">
+      We aggregate news from 20+ local and regional sources. Our system checks for updates every 2 hours. 
+      You can subscribe to any of these feeds in your favorite RSS reader.
+    </p>
+    
+    <div class="flex items-center gap-4 text-xs">
+      <span class="flex items-center">
+        <span class="w-2 h-2 rounded-full bg-green-500 mr-1"></span> Active
+      </span>
+      <span class="flex items-center">
+        <span class="w-2 h-2 rounded-full bg-yellow-500 mr-1"></span> Limited
+      </span>
+      <span class="flex items-center">
+        <span class="w-2 h-2 rounded-full bg-gray-300 mr-1"></span> Pending
+      </span>
+    </div>
+  </div>
+</section>

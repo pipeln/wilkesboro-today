@@ -1,0 +1,207 @@
+---
+// Area News Feed Component (Local + State)
+const localNews = [
+  {
+    id: 1,
+    title: 'Wilkes County Schools Superintendent Mark Byrd passes away',
+    source: 'Journal Patriot',
+    time: '2 hours ago',
+    category: 'Breaking',
+    url: '#'
+  },
+  {
+    id: 2,
+    title: 'County Commissioners meeting rescheduled to March 5',
+    source: 'Wilkes County Gov',
+    time: '4 hours ago',
+    category: 'Government',
+    url: '#'
+  },
+  {
+    id: 3,
+    title: 'Food Truck Fridays returning to downtown North Wilkesboro',
+    source: 'Town of N. Wilkesboro',
+    time: '6 hours ago',
+    category: 'Events',
+    url: '#'
+  }
+];
+
+const stateNews = [
+  {
+    id: 1,
+    title: 'NC Legislature considers new education funding bill',
+    source: 'WRAL',
+    time: '1 hour ago',
+    category: 'Politics',
+    url: '#'
+  },
+  {
+    id: 2,
+    title: 'State health officials report flu cases declining',
+    source: 'NC DHHS',
+    time: '3 hours ago',
+    category: 'Health',
+    url: '#'
+  },
+  {
+    id: 3,
+    title: 'New highway expansion project announced for I-40',
+    source: 'NCDOT',
+    time: '5 hours ago',
+    category: 'Transportation',
+    url: '#'
+  }
+];
+
+const nearbyNews = [
+  {
+    id: 1,
+    title: 'Boone approves new affordable housing development',
+    source: 'Watauga Democrat',
+    location: 'Boone',
+    time: '2 hours ago',
+    url: '#'
+  },
+  {
+    id: 2,
+    title: 'Asheville tourism rebounds post-Helene',
+    source: 'Mountain Xpress',
+    location: 'Asheville',
+    time: '4 hours ago',
+    url: '#'
+  },
+  {
+    id: 3,
+    title: 'Winston-Salem opens new business incubator',
+    source: 'Winston-Salem Journal',
+    location: 'Winston-Salem',
+    time: '6 hours ago',
+    url: '#'
+  }
+];
+---
+
+<section class="space-y-6">
+  <!-- Tabs -->
+  <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+    <button class="flex-1 py-2 px-4 rounded-md bg-white text-primary font-medium shadow-sm">
+      Local
+    </button>
+    <button class="flex-1 py-2 px-4 rounded-md text-gray-600 hover:text-gray-900">
+      State
+    </button>
+    <button class="flex-1 py-2 px-4 rounded-md text-gray-600 hover:text-gray-900">
+      Nearby
+    </button>
+  </div>
+
+  <!-- Local News -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">Wilkes County</h3>
+      <span class="text-xs text-gray-500">Live updates</span>
+    </div>
+
+    <div class="space-y-4">
+      {localNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
+              item.category === 'Breaking' ? 'bg-red-500 animate-pulse' : 'bg-primary'
+            }`}></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+                {item.category === 'Breaking' && (
+                  <span class="ml-2 text-red-600 font-medium">BREAKING</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/local" class="block text-center text-primary text-sm hover:underline mt-4">
+      More local news →
+    </a>
+  </div>
+
+  <!-- State News -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">North Carolina</h3>
+      <span class="text-xs text-gray-500">Statewide</span>
+    </div>
+
+    <div class="space-y-4">
+      {stateNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-blue-500"></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/state" class="block text-center text-primary text-sm hover:underline mt-4">
+      More state news →
+    </a>
+  </div>
+
+  <!-- Nearby Areas -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">Nearby Areas</h3>
+      <span class="text-xs text-gray-500">WNC Region</span>
+    </div>
+
+    <div class="space-y-4">
+      {nearbyNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-green-500"></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span class="text-green-600">{item.location}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/regional" class="block text-center text-primary text-sm hover:underline mt-4">
+      More regional news →
+    </a>
+  </div>
+</section>
