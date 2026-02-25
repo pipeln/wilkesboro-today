@@ -13,8 +13,8 @@ const articles = await getNewsArticles(6);
 const events = await getEvents(5);
 
 // Featured article (first one)
-const featuredArticle = articles[0];
-const latestNews = articles.slice(1, 4);
+const featuredArticle = articles[0] || null;
+const latestNews = articles.slice(1, 4) || [];
 ---
 
 <Layout>

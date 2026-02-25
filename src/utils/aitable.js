@@ -46,16 +46,20 @@ export async function getNewsArticles(limit = 10) {
     maxRecords: limit
   });
   
+  if (!records || records.length === 0) {
+    return [];
+  }
+  
   return records.map(record => ({
     id: record.recordId,
-    title: record.fields.Title_Original || record.fields.Title,
-    summary: record.fields.Summary_Short || record.fields.Body_Original?.substring(0, 200),
-    body: record.fields.Body_Original,
-    category: record.fields.Category,
-    source: record.fields.Source_Name,
+    title: record.fields.Title_Original || record.fields.Title || 'Untitled',
+    summary: record.fields.Summary_Short || (record.fields.Body_Original ? record.fields.Body_Original.substring(0, 200) : ''),
+    body: record.fields.Body_Original || '',
+    category: record.fields.Category || 'Community',
+    source: record.fields.Source_Name || 'Unknown',
     sourceUrl: record.fields.Source_URL,
-    date: record.fields.Date_Original,
-    location: record.fields.Location,
+    date: record.fields.Date_Original || new Date().toISOString(),
+    location: record.fields.Location || 'Wilkes County',
     slug: slugify(record.fields.Title_Original || record.fields.Title)
   }));
 }
@@ -66,17 +70,21 @@ export async function getEvents(limit = 10) {
     maxRecords: limit
   });
   
+  if (!records || records.length === 0) {
+    return [];
+  }
+  
   return records.map(record => ({
     id: record.recordId,
-    title: record.fields.Title,
-    description: record.fields.Description,
-    date: record.fields.Date_Start,
-    time: record.fields.Time_Start,
-    venue: record.fields.Venue_Name,
-    address: record.fields.Venue_Address,
-    city: record.fields.City,
-    organizer: record.fields.Organizer_Name,
-    sourceUrl: record.fields.Source_URL
+    title: record.fields.Title || 'Untitled Event',
+    description: record.fields.Description || '',
+    date: record.fields.Date_Start || new Date().toISOString().split('T')[0],
+    time: record.fields.Time_Start || 'TBD',
+    venue: record.fields.Venue_Name || 'TBD',
+    address: record.fields.Venue_Address || '',
+    city: record.fields.City || 'Wilkes County',
+    organizer: record.fields.Organizer_Name || '',
+    sourceUrl: record.fields.Source_URL || ''
   }));
 }
 
@@ -106,6 +114,7 @@ export async function getResources(category = null) {
 
 // Helper: Create URL-friendly slug
 function slugify(text) {
+  if (!text) return 'untitled';
   return text
     .toString()
     .toLowerCase()
