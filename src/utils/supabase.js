@@ -12,18 +12,17 @@ export const supabase = createClient(
   supabaseKey || 'placeholder-key'
 );
 
-// Fetch articles from Supabase
+// Fetch articles from Supabase (using news_published table)
 export async function getArticles(limit = 10, category = null) {
   try {
     let query = supabase
-      .from('articles')
+      .from('news_published')
       .select('*')
-      .eq('status', 'published')
-      .order('published_at', { ascending: false })
+      .order('Published_At', { ascending: false })
       .limit(limit);
     
     if (category && category !== 'All') {
-      query = query.eq('category', category);
+      query = query.eq('Category', category);
     }
     
     const { data, error } = await query;
@@ -35,14 +34,13 @@ export async function getArticles(limit = 10, category = null) {
     
     return data?.map(article => ({
       id: article.id,
-      title: article.title,
-      summary: article.summary,
-      body: article.body,
-      category: article.category,
-      source: article.source_name,
-      sourceUrl: article.source_url,
-      image: article.image_url || '/images/default-thumbnail.jpg',
-      date: article.published_at || article.created_at,
+      title: article.Title,
+      summary: article.Summary,
+      category: article.Category,
+      source: 'Wilkesboro Today',
+      sourceUrl: article.Source_URL || article.WordPress_URL,
+      image: '/images/default-thumbnail.jpg',
+      date: article.Published_At,
       slug: article.id
     })) || getDemoArticles(limit);
     
@@ -52,11 +50,11 @@ export async function getArticles(limit = 10, category = null) {
   }
 }
 
-// Fetch single article
+// Fetch single article (from news_raw for full content)
 export async function getArticle(id) {
   try {
     const { data, error } = await supabase
-      .from('articles')
+      .from('news_raw')
       .select('*')
       .eq('id', id)
       .single();
@@ -68,15 +66,15 @@ export async function getArticle(id) {
     
     return {
       id: data.id,
-      title: data.title,
-      summary: data.summary,
-      body: data.body,
-      category: data.category,
-      source: data.source_name,
-      sourceUrl: data.source_url,
-      author: data.source_name || 'Staff',
-      image: data.image_url || '/images/default-hero.jpg',
-      date: data.published_at || data.created_at
+      title: data.Title_Original,
+      summary: data.Summary_Short || data.Body_Original?.substring(0, 200),
+      body: data.Body_Original,
+      category: data.Category,
+      source: data.Source_Name,
+      sourceUrl: data.Source_URL,
+      author: data.Source_Name || 'Staff',
+      image: '/images/default-hero.jpg',
+      date: data.Date_Original
     };
     
   } catch (e) {
@@ -85,14 +83,14 @@ export async function getArticle(id) {
   }
 }
 
-// Fetch events from Supabase
+// Fetch events from Supabase (using events_full table)
 export async function getEvents(limit = 10) {
   try {
     const { data, error } = await supabase
-      .from('events')
+      .from('events_full')
       .select('*')
-      .eq('status', 'approved')
-      .order('date_start', { ascending: true })
+      .eq('Status', 'Approved')
+      .order('Date_Start', { ascending: true })
       .limit(limit);
     
     if (error) {
@@ -102,15 +100,15 @@ export async function getEvents(limit = 10) {
     
     return data?.map(event => ({
       id: event.id,
-      title: event.title,
-      description: event.description,
-      date: event.date_start,
-      time: event.time_start,
-      venue: event.venue_name,
-      address: event.venue_address,
-      city: event.city,
-      organizer: event.organizer_name,
-      sourceUrl: event.source_url
+      title: event.Title,
+      description: event.Description,
+      date: event.Date_Start,
+      time: event.Time_Start,
+      venue: event.Venue_Name,
+      address: event.Venue_Address,
+      city: event.City,
+      organizer: event.Organizer_Name,
+      sourceUrl: event.Source_URL
     })) || getDemoEvents(limit);
     
   } catch (e) {
@@ -123,18 +121,18 @@ export async function getEvents(limit = 10) {
 function getDemoArticles(limit) {
   const articles = [
     {
-      id: 'superintendent-byrd-passes-away',
+      id: '1',
       title: 'Wilkes County Schools Superintendent Mark Byrd Passes Away',
       summary: 'Superintendent Mark Byrd, 54, was found dead at his residence on February 20. The NCSBI is investigating. Dr. Westley Wood has been appointed interim superintendent.',
       category: 'Breaking',
       source: 'Journal Patriot',
-      sourceUrl: 'https://www.journalpatriot.com/news/superintendent-byrd-found-dead-from-apparent-gunshot/article_4367622b-bb8a-55ed-b4ed-2b5a5517f1d1.html',
+      sourceUrl: 'https://www.journalpatriot.com',
       date: '2026-02-20',
       image: '/images/default-hero.jpg',
-      slug: 'superintendent-byrd-passes-away'
+      slug: '1'
     },
     {
-      id: 'commissioners-meeting-march-5',
+      id: '2',
       title: 'County Commissioners Meeting Rescheduled to March 5',
       summary: 'The Wilkes County Board of Commissioners meeting has been moved from March 3 to Thursday, March 5, 2026 at 5:00 PM.',
       category: 'Government',
@@ -142,39 +140,25 @@ function getDemoArticles(limit) {
       sourceUrl: 'https://www.wilkescounty.net',
       date: '2026-02-26',
       image: '/images/default-thumbnail.jpg',
-      slug: 'commissioners-meeting-march-5'
-    },
-    {
-      id: 'wilkesboro-comic-con-feb-28',
-      title: 'Wilkesboro Comic Con Returns February 28',
-      summary: 'The annual Wilkesboro Comic Con is back this Saturday with vendors, cosplay, and family-friendly activities.',
-      category: 'Events',
-      source: 'wilkescomiccon.com',
-      sourceUrl: 'https://wilkescomiccon.com',
-      date: '2026-02-26',
-      image: '/images/default-thumbnail.jpg',
-      slug: 'wilkesboro-comic-con-feb-28'
+      slug: '2'
     }
   ];
   return articles.slice(0, limit);
 }
 
 function getDemoArticle(id) {
-  const articles = {
-    'superintendent-byrd-passes-away': {
-      id: 'superintendent-byrd-passes-away',
-      title: 'Wilkes County Schools Superintendent Mark Byrd Passes Away',
-      summary: 'Superintendent Mark Byrd, 54, was found dead at his residence on February 20.',
-      body: 'Wilkes County School Superintendent Mark Byrd, 54, was found dead Friday at his residence on Oak Ridge Church Road in Hays from an apparent self-inflicted gunshot wound, according to the Wilkes County Sheriff\'s Office.',
-      category: 'Breaking',
-      source: 'Journal Patriot',
-      sourceUrl: 'https://www.journalpatriot.com/news/superintendent-byrd-found-dead-from-apparent-gunshot/article_4367622b-bb8a-55ed-b4ed-2b5a5517f1d1.html',
-      author: 'Journal Patriot Staff',
-      image: '/images/default-hero.jpg',
-      date: '2026-02-20'
-    }
+  return {
+    id: id,
+    title: 'Article Not Found',
+    summary: 'This article could not be loaded.',
+    body: 'Please try again later.',
+    category: 'News',
+    source: 'Wilkesboro Today',
+    sourceUrl: '/',
+    author: 'Staff',
+    image: '/images/default-hero.jpg',
+    date: new Date().toISOString()
   };
-  return articles[id] || articles['superintendent-byrd-passes-away'];
 }
 
 function getDemoEvents(limit) {
