@@ -1,17 +1,21 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
 import sitemap from '@astrojs/sitemap';
-import rss from '@astrojs/rss';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://wilkesborotoday.com',
+  site: 'https://wilkesboro-today.pages.dev',
   integrations: [
     tailwind(),
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.includes('/admin'),
+      customPages: [
+        'https://wilkesboro-today.pages.dev/',
+        'https://wilkesboro-today.pages.dev/events/',
+      ],
+    }),
   ],
   output: 'static',
-  adapter: undefined, // Use static output for Cloudflare Pages
   build: {
     format: 'directory'
   }
