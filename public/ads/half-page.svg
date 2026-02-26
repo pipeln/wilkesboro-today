@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="600" viewBox="0 0 300 600">
+  <defs>
+    <filter id="shadow" x="-3%" y="-1%" width="106%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e3a8a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background with rounded corners and shadow -->
+  <rect x="2" y="2" width="296" height="596" rx="8" ry="8" fill="url(#bgGradient)" filter="url(#shadow)"/>
+  
+  <!-- Subtle accent line at bottom -->
+  <rect x="2" y="596" width="296" height="2" rx="0" fill="#3b82f6" opacity="0.5"/>
+  
+  <!-- Main text -->
+  <text x="150" y="200" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="bold" fill="#ffffff" text-anchor="middle">Your Ad</text>
+  <text x="150" y="245" font-family="Georgia, 'Times New Roman', serif" font-size="36" font-weight="bold" fill="#ffffff" text-anchor="middle">Here</text>
+  
+  <!-- Subtitle -->
+  <text x="150" y="300" font-family="Arial, Helvetica, sans-serif" font-size="16" fill="#cbd5e1" text-anchor="middle">300 x 600 pixels</text>
+  <text x="150" y="325" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">Half Page Ad</text>
+  
+  <!-- Divider line -->
+  <line x1="75" y1="380" x2="225" y2="380" stroke="#3b82f6" stroke-width="1" opacity="0.5"/>
+  
+  <!-- Contact info -->
+  <text x="150" y="450" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#94a3b8" text-anchor="middle">Contact us at</text>
+  <text x="150" y="480" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="500">advertise@</text>
+  <text x="150" y="505" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#ffffff" text-anchor="middle" font-weight="500">wilkesborotoday.com</text>
+  
+  <!-- Branding -->
+  <text x="150" y="570" font-family="Georgia, 'Times New Roman', serif" font-size="12" fill="#64748b" text-anchor="middle" font-style="italic">Wilkesboro Today</text>
+</svg>

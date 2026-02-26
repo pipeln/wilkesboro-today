@@ -1,0 +1,62 @@
+---
+// Ad Banner Component - Displays advertisements
+const { size = 'medium-rectangle', className = '' } = Astro.props;
+
+// Ad size configurations
+const adSizes = {
+  'leaderboard': { width: 728, height: 90, label: 'Leaderboard' },
+  'medium-rectangle': { width: 300, height: 250, label: 'Medium Rectangle' },
+  'skyscraper': { width: 160, height: 600, label: 'Wide Skyscraper' },
+  'half-page': { width: 300, height: 600, label: 'Half Page' },
+  'large-rectangle': { width: 336, height: 280, label: 'Large Rectangle' },
+  'billboard': { width: 970, height: 250, label: 'Billboard' }
+};
+
+const adConfig = adSizes[size] || adSizes['medium-rectangle'];
+---
+
+<div class={`ad-container ${className}`} data-ad-size={size}>
+  <a 
+    href="/advertise" 
+    class="ad-link block relative overflow-hidden rounded-lg shadow-sm hover:shadow-md transition"
+    style={`width: ${adConfig.width}px; height: ${adConfig.height}px;`}
+  >
+    <img 
+      src={`/ads/${size}.png`}
+      alt={`Advertisement - ${adConfig.label}`}
+      width={adConfig.width}
+      height={adConfig.height}
+      class="w-full h-full object-cover"
+      onerror="this.src='/ads/placeholder.png'"
+    />
+    
+    <!-- Overlay for live ads -->
+    <div class="ad-overlay absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 hover:opacity-100 transition flex items-end justify-center pb-4">
+      <span class="text-white text-xs font-medium bg-black/70 px-2 py-1 rounded">
+        Advertise Here
+      </span>
+    </div>
+  </a>
+  
+  <!-- Ad label (for accessibility) -->
+  <span class="sr-only">Advertisement</span>
+</div>
+
+<style>
+  .ad-container {
+    display: inline-block;
+  }
+  
+  .ad-link {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .ad-link:hover {
+    border-color: #1e40af;
+  }
+  
+  .ad-overlay {
+    pointer-events: none;
+  }
+</style>
