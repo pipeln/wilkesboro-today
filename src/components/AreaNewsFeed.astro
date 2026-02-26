@@ -1,55 +1,71 @@
 ---
-// Area News Feed Component (Local + State)
+// Area News Feed Component - Demo Ready Content
 const localNews = [
   {
     id: 1,
     title: 'Wilkes County Schools Superintendent Mark Byrd passes away',
     source: 'Journal Patriot',
-    time: '2 hours ago',
+    time: 'Feb 20, 2026',
     category: 'Breaking',
-    url: '#'
+    url: 'https://www.journalpatriot.com/news/superintendent-byrd-found-dead-from-apparent-gunshot/article_4367622b-bb8a-55ed-b4ed-2b5a5517f1d1.html'
   },
   {
     id: 2,
     title: 'County Commissioners meeting rescheduled to March 5',
     source: 'Wilkes County Gov',
-    time: '4 hours ago',
+    time: 'Feb 26, 2026',
     category: 'Government',
-    url: '#'
+    url: 'https://www.wilkescounty.net'
   },
   {
     id: 3,
-    title: 'Food Truck Fridays returning to downtown North Wilkesboro',
-    source: 'Town of N. Wilkesboro',
-    time: '6 hours ago',
+    title: 'Wilkesboro Comic Con returns this Saturday, Feb 28',
+    source: 'wilkescomiccon.com',
+    time: 'Feb 26, 2026',
     category: 'Events',
-    url: '#'
+    url: 'https://wilkescomiccon.com'
+  },
+  {
+    id: 4,
+    title: 'Brushy Mountain Apple Festival set for October 3, 2026',
+    source: 'Brushy Mountain Ruritan',
+    time: 'Feb 26, 2026',
+    category: 'Events',
+    url: 'http://www.applefestival.net'
+  },
+  {
+    id: 5,
+    title: 'NASCAR returning to North Wilkesboro Speedway July 17-19',
+    source: 'North Wilkesboro Speedway',
+    time: 'Feb 26, 2026',
+    category: 'Sports',
+    url: 'https://www.northwilkesborospeedway.com'
   }
 ];
 
 const stateNews = [
   {
     id: 1,
-    title: 'NC Legislature considers new education funding bill',
-    source: 'WRAL',
-    time: '1 hour ago',
+    title: 'NC Primary Election Day is March 3, 2026',
+    source: 'NC State Board of Elections',
+    time: 'Feb 26, 2026',
     category: 'Politics',
-    url: '#'
+    url: 'https://www.ncsbe.gov'
   },
   {
     id: 2,
-    title: 'State health officials report flu cases declining',
-    source: 'NC DHHS',
-    time: '3 hours ago',
-    category: 'Health',
-    url: '#'
+    title: 'Early voting continues through February 28',
+    source: 'Wilkes Board of Elections',
+    time: 'Feb 26, 2026',
+    category: 'Government',
+    url: 'https://www.wilkescounty.net'
   },
   {
     id: 3,
-    title: 'New highway expansion project announced for I-40',
-    source: 'NCDOT',
-    time: '5 hours ago',
-    category: 'Transportation',
+    title: 'State health officials report flu cases declining',
+    source: 'NC DHHS',
+    time: 'Feb 25, 2026',
+    category: 'Health',
     url: '#'
   }
 ];
@@ -57,26 +73,26 @@ const stateNews = [
 const nearbyNews = [
   {
     id: 1,
-    title: 'Boone approves new affordable housing development',
-    source: 'Watauga Democrat',
-    location: 'Boone',
-    time: '2 hours ago',
-    url: '#'
+    title: 'Mount Airy Mass Shooting suspects arrested',
+    source: 'Mount Airy News',
+    location: 'Surry County',
+    time: 'Feb 26, 2026',
+    url: 'https://www.mtairynews.com'
   },
   {
     id: 2,
-    title: 'Asheville tourism rebounds post-Helene',
-    source: 'Mountain Xpress',
-    location: 'Asheville',
-    time: '4 hours ago',
+    title: 'Boone approves new affordable housing development',
+    source: 'Watauga Democrat',
+    location: 'Boone',
+    time: 'Feb 25, 2026',
     url: '#'
   },
   {
     id: 3,
-    title: 'Winston-Salem opens new business incubator',
-    source: 'Winston-Salem Journal',
-    location: 'Winston-Salem',
-    time: '6 hours ago',
+    title: 'Alexander County pays off jail debt',
+    source: 'Taylorsville Times',
+    location: 'Taylorsville',
+    time: 'Feb 24, 2026',
     url: '#'
   }
 ];
