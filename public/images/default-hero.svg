@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" width="1200" height="600">
+  <defs>
+    <!-- Gradient for depth -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Subtle pattern for newspaper texture -->
+    <pattern id="dotPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#cbd5e1" opacity="0.3"/>
+    </pattern>
+    
+    <!-- Shadow filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="600" fill="url(#bgGradient)"/>
+  <rect width="1200" height="600" fill="url(#dotPattern)"/>
+  
+  <!-- Decorative geometric shapes -->
+  <rect x="0" y="0" width="1200" height="8" fill="#1e40af"/>
+  <rect x="0" y="592" width="1200" height="8" fill="#1e40af"/>
+  
+  <!-- Left accent bar -->
+  <rect x="60" y="80" width="6" height="440" fill="#dc2626" rx="3"/>
+  
+  <!-- Main content area -->
+  <g transform="translate(100, 100)">
+    <!-- Newspaper icon stylized -->
+    <g transform="translate(600, 50)" filter="url(#shadow)">
+      <!-- Newspaper stack -->
+      <rect x="10" y="10" width="280" height="340" fill="#fff" rx="4" stroke="#cbd5e1" stroke-width="1"/>
+      <rect x="0" y="0" width="280" height="340" fill="#fff" rx="4" stroke="#94a3b8" stroke-width="2"/>
+      
+      <!-- Newspaper header bar -->
+      <rect x="0" y="0" width="280" height="50" fill="#1e40af" rx="4"/>
+      <rect x="0" y="46" width="280" height="4" fill="#dc2626"/>
+      
+      <!-- Mini headline lines -->
+      <rect x="20" y="70" width="200" height="12" fill="#1e40af" rx="2" opacity="0.9"/>
+      <rect x="20" y="90" width="160" height="8" fill="#64748b" rx="2" opacity="0.6"/>
+      <rect x="20" y="105" width="180" height="8" fill="#64748b" rx="2" opacity="0.6"/>
+      <rect x="20" y="120" width="140" height="8" fill="#64748b" rx="2" opacity="0.6"/>
+      
+      <!-- Article columns representation -->
+      <rect x="20" y="150" width="70" height="150" fill="#e2e8f0" rx="2"/>
+      <rect x="105" y="150" width="70" height="150" fill="#e2e8f0" rx="2"/>
+      <rect x="190" y="150" width="70" height="150" fill="#e2e8f0" rx="2"/>
+      
+      <!-- Breaking news badge on newspaper -->
+      <rect x="200" y="320" width="60" height="20" fill="#dc2626" rx="3"/>
+      <text x="230" y="334" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#fff" text-anchor="middle">LIVE</text>
+    </g>
+    
+    <!-- Main title -->
+    <text x="0" y="120" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="bold" fill="#1e40af">Wilkesboro</text>
+    <text x="0" y="200" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="bold" fill="#1e40af">Today</text>
+    
+    <!-- Tagline -->
+    <text x="5" y="250" font-family="Arial, sans-serif" font-size="24" fill="#64748b" letter-spacing="2">YOUR LOCAL NEWS SOURCE</text>
+    
+    <!-- Decorative line under tagline -->
+    <rect x="5" y="270" width="400" height="3" fill="#dc2626" rx="1.5"/>
+    
+    <!-- Stats/features indicators -->
+    <g transform="translate(0, 320)">
+      <circle cx="15" cy="15" r="15" fill="#1e40af" opacity="0.1"/>
+      <text x="15" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">24/7</text>
+      <text x="40" y="20" font-family="Arial, sans-serif" font-size="14" fill="#475569">Breaking News</text>
+      
+      <circle cx="180" cy="15" r="15" fill="#1e40af" opacity="0.1"/>
+      <text x="180" y="20" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">WC</text>
+      <text x="205" y="20" font-family="Arial, sans-serif" font-size="14" fill="#475569">Wilkes County</text>
+    </g>
+  </g>
+  
+  <!-- Breaking news ticker style element at bottom -->
+  <g transform="translate(0, 520)">
+    <rect x="0" y="0" width="1200" height="50" fill="#1e40af"/>
+    <rect x="0" y="0" width="120" height="50" fill="#dc2626"/>
+    <text x="60" y="32" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle">BREAKING</text>
+    <text x="140" y="32" font-family="Arial, sans-serif" font-size="16" fill="#fff">Local news, weather, sports &amp; more for Wilkes County, NC</text>
+  </g>
+  
+  <!-- Corner accent -->
+  <polygon points="1100,0 1200,0 1200,100" fill="#1e40af" opacity="0.05"/>
+</svg>
