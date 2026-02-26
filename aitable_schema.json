@@ -1,0 +1,126 @@
+{
+  "datasheets": [
+    {
+      "name": "News_Raw",
+      "description": "Raw news items from official sources, local media, and submissions",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Source_Type", "type": "SingleSelect", "options": ["Gov", "School", "Local_Media", "Resident_Tip", "Social", "Other"]},
+        {"name": "Source_URL", "type": "URL"},
+        {"name": "Source_Name", "type": "SingleText"},
+        {"name": "Title_Original", "type": "SingleText"},
+        {"name": "Body_Original", "type": "Text"},
+        {"name": "Date_Original", "type": "DateTime", "includeTime": true},
+        {"name": "Location", "type": "SingleText"},
+        {"name": "Category", "type": "SingleSelect", "options": ["Civics", "Schools", "Public_Safety", "Business", "Community", "Other"]},
+        {"name": "Status", "type": "SingleSelect", "options": ["New", "Needs_Summary", "Needs_Review", "Approved", "Rejected", "Published"]},
+        {"name": "Title_Short", "type": "SingleText"},
+        {"name": "Summary_Short", "type": "Text"},
+        {"name": "Summary_Long", "type": "Text"},
+        {"name": "WordPress_Post_ID", "type": "SingleText"},
+        {"name": "WordPress_URL", "type": "URL"},
+        {"name": "Last_Reviewed_By", "type": "Member"},
+        {"name": "Last_Reviewed_At", "type": "DateTime", "includeTime": false, "autoFill": true},
+        {"name": "Notes", "type": "Text"}
+      ]
+    },
+    {
+      "name": "News_Published",
+      "description": "Simplified table of items already live on the site",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Title", "type": "SingleText"},
+        {"name": "Summary", "type": "Text"},
+        {"name": "Category", "type": "SingleSelect", "options": ["Civics", "Schools", "Public_Safety", "Business", "Community", "Other"]},
+        {"name": "Published_At", "type": "DateTime", "includeTime": true},
+        {"name": "WordPress_URL", "type": "URL"},
+        {"name": "Source_URL", "type": "URL"},
+        {"name": "Audience", "type": "SingleSelect", "options": ["All", "Families", "Seniors", "Business"]}
+      ]
+    },
+    {
+      "name": "Events",
+      "description": "Community events calendar",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Title", "type": "SingleText"},
+        {"name": "Description", "type": "Text"},
+        {"name": "Date_Start", "type": "DateTime", "includeTime": false},
+        {"name": "Date_End", "type": "DateTime", "includeTime": false},
+        {"name": "Time_Start", "type": "SingleText"},
+        {"name": "Time_End", "type": "SingleText"},
+        {"name": "Venue_Name", "type": "SingleText"},
+        {"name": "Venue_Address", "type": "SingleText"},
+        {"name": "City", "type": "SingleText"},
+        {"name": "Organizer_Name", "type": "SingleText"},
+        {"name": "Organizer_Contact", "type": "SingleText"},
+        {"name": "Source_URL", "type": "URL"},
+        {"name": "Submitted_By", "type": "SingleText"},
+        {"name": "Submission_Channel", "type": "SingleSelect", "options": ["Form", "Email", "Facebook", "Telegram", "Other"]},
+        {"name": "Status", "type": "SingleSelect", "options": ["New", "Needs_Details", "Needs_Review", "Approved", "Rejected", "Published"]},
+        {"name": "WordPress_Event_ID", "type": "SingleText"},
+        {"name": "WordPress_URL", "type": "URL"},
+        {"name": "Google_Calendar_Event_ID", "type": "SingleText"},
+        {"name": "Tags", "type": "MultiSelect", "options": ["Family", "Free", "Music", "Government", "School", "Outdoor", "Food"]},
+        {"name": "Notes", "type": "Text"}
+      ]
+    },
+    {
+      "name": "Resources",
+      "description": "Community resources directory",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Name", "type": "SingleText"},
+        {"name": "Type", "type": "SingleSelect", "options": ["Gov_Office", "Nonprofit", "Business", "School", "Health", "Utility", "Other"]},
+        {"name": "Short_Description", "type": "Text"},
+        {"name": "Address", "type": "SingleText"},
+        {"name": "City", "type": "SingleText"},
+        {"name": "County", "type": "SingleText"},
+        {"name": "Phone", "type": "Phone"},
+        {"name": "Email", "type": "Email"},
+        {"name": "Website", "type": "URL"},
+        {"name": "Hours", "type": "SingleText"},
+        {"name": "Audience", "type": "MultiSelect", "options": ["All", "Families", "Seniors", "Students", "Veterans"]},
+        {"name": "Topics", "type": "MultiSelect", "options": ["Food", "Housing", "Jobs", "Health", "Education", "Recreation", "Legal", "Emergency"]},
+        {"name": "Status", "type": "SingleSelect", "options": ["Active", "Inactive", "Needs_Verification"]},
+        {"name": "Last_Verified_At", "type": "DateTime", "includeTime": false},
+        {"name": "Last_Verified_By", "type": "Member"},
+        {"name": "WordPress_URL", "type": "URL"},
+        {"name": "Notes", "type": "Text"}
+      ]
+    },
+    {
+      "name": "Submissions",
+      "description": "Resident-submitted content",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Submission_Type", "type": "SingleSelect", "options": ["Event", "Announcement", "Story_Idea", "Question", "Other"]},
+        {"name": "Submitted_By_Name", "type": "SingleText"},
+        {"name": "Submitted_By_Email", "type": "Email"},
+        {"name": "Source_Channel", "type": "SingleSelect", "options": ["AITable_Form", "Website_Form", "Email", "Telegram", "Other"]},
+        {"name": "Title", "type": "SingleText"},
+        {"name": "Body", "type": "Text"},
+        {"name": "Related_Date", "type": "DateTime", "includeTime": false},
+        {"name": "Related_Resource_ID", "type": "SingleText"},
+        {"name": "Status", "type": "SingleSelect", "options": ["New", "Needs_Follow_Up", "Needs_Review", "Approved", "Rejected", "Published"]},
+        {"name": "Linked_Record", "type": "SingleText"},
+        {"name": "Notes", "type": "Text"}
+      ]
+    },
+    {
+      "name": "Editorial_Tasks",
+      "description": "Work requests and assignments",
+      "fields": [
+        {"name": "id", "type": "AutoNumber", "isPrimary": true},
+        {"name": "Task_Type", "type": "SingleSelect", "options": ["Summarize_News", "Create_Event", "Verify_Resource", "Build_Newsletter", "Social_Post", "Other"]},
+        {"name": "Input_Reference", "type": "SingleText"},
+        {"name": "Requested_By", "type": "Member"},
+        {"name": "Status", "type": "SingleSelect", "options": ["New", "In_Progress", "Needs_Review", "Done"]},
+        {"name": "Output_Reference", "type": "SingleText"},
+        {"name": "Notes", "type": "Text"},
+        {"name": "Created_At", "type": "CreatedTime"},
+        {"name": "Last_Modified", "type": "LastModifiedTime"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+/root/.openclaw/workspace/scrape_agenda_center.py:45: DeprecationWarning: The 'text' argument to find()-type methods is deprecated. Use 'string' instead.
+  board_sections = soup.find_all(text=re.compile(r'County Commissioners|Board of Health|Planning Board|Board of Elections'))
+============================================================
+ 📋 Wilkes County Agenda Center Scraper
+ 2026-02-26 07:00
+============================================================
+
+🔍 Fetching agenda center...
+
+📊 Found 7 meetings
+
+📅 Wilkes County Board
+   Date: Mar 5, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_03052026-460
+
+📅 County Commissioners
+   Date: Mar 5, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_03052026-460
+
+📅 County Commissioners
+   Date: Feb 17, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_02172026-459
+
+📅 County Commissioners
+   Date: Feb 10, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_02102026-457
+
+📅 County Commissioners
+   Date: Jan 20, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_01202026-456
+
+📅 County Commissioners
+   Date: Jan 6, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_01062026-455
+
+📅 Board of Health
+   Date: Feb 9, 2026
+   Agenda: https://wilkescounty.net/AgendaCenter/ViewFile/Agenda/_02092026-458
+
+💾 Creating AITable records...
+  ✓ Event: Wilkes County Board Meeting...
+  ✓ News: Agenda Posted: Wilkes County Board - Mar 5, 2026...
+  ✓ Event: County Commissioners Meeting...
+  ✓ News: Agenda Posted: County Commissioners - Mar 5, 2026...
+  ✓ Event: County Commissioners Meeting...
+  ✓ News: Agenda Posted: County Commissioners - Feb 17, 2026...
+  ✓ Event: County Commissioners Meeting...
+  ✓ News: Agenda Posted: County Commissioners - Feb 10, 2026...
+  ✓ Event: County Commissioners Meeting...
+  ✓ News: Agenda Posted: County Commissioners - Jan 20, 2026...
+  ✓ Event: County Commissioners Meeting...
+  ✓ News: Agenda Posted: County Commissioners - Jan 6, 2026...
+  ✓ Event: Board of Health Meeting...
+  ✓ News: Agenda Posted: Board of Health - Feb 9, 2026...
+
+============================================================
+ ✅ Created 7 events, 7 news items
+============================================================

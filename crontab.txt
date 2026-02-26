@@ -1,0 +1,20 @@
+# WilkesBot Cron Jobs
+# Email processing and newsletter delivery
+
+# Check for email submissions every 15 minutes
+*/15 * * * * cd /root/.openclaw/workspace && /usr/bin/python3 email_processor.py >> /root/.openclaw/workspace/logs/email.log 2>&1
+
+# Send daily newsletter at 8:00 AM
+0 8 * * * cd /root/.openclaw/workspace && /usr/bin/python3 send_newsletter.py >> /root/.openclaw/workspace/logs/newsletter.log 2>&1
+
+# Run RSS feed enrichment every 2 hours during the day (using blogwatcher)
+0 8,10,12,14,16,18 * * * cd /root/.openclaw/workspace && /usr/bin/python3 sync_blogwatcher.py >> /root/.openclaw/workspace/logs/blogwatcher.log 2>&1
+
+# Backup: Run Python RSS scraper once daily at 6 AM (for sources not in blogwatcher)
+0 6 * * * cd /root/.openclaw/workspace && /usr/bin/python3 enhanced_populate.py >> /root/.openclaw/workspace/logs/rss.log 2>&1
+
+# Scrape agenda center for new meetings (daily at 7 AM)
+0 7 * * * cd /root/.openclaw/workspace && /usr/bin/python3 scrape_agenda_center.py >> /root/.openclaw/workspace/logs/agenda.log 2>&1
+
+# Log rotation - keep last 7 days of logs
+0 0 * * * find /root/.openclaw/workspace/logs -name "*.log" -mtime +7 -delete

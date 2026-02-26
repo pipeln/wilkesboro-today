@@ -1,0 +1,34 @@
+
+╔══════════════════════════════════════════════════════════════╗
+║           IMPORT EVENTS TO GOOGLE CALENDAR                   ║
+╚══════════════════════════════════════════════════════════════╝
+
+1. Go to https://calendar.google.com
+
+2. In the left sidebar, find your calendar "Wilkesboro Community Events"
+
+3. Click the three dots (⋮) next to the calendar name
+
+4. Select "Settings and sharing"
+
+5. Scroll down to "Import & Export"
+
+6. Click "Import"
+
+7. Select the file: events_export.csv
+
+8. Choose your "Wilkesboro Community Events" calendar
+
+9. Click "Import"
+
+✅ All events will appear in your calendar!
+
+═══════════════════════════════════════════════════════════════
+
+TIPS:
+- Events with dates will show on the correct day
+- Events without specific times are marked as "All day"
+- You can edit any event after importing
+- The calendar is public and embeddable on your website
+
+═══════════════════════════════════════════════════════════════
