@@ -31,10 +31,8 @@ def log(message):
 
 def fetch_pending_articles():
     """Fetch articles waiting for approval."""
-    url = f"{SUPABASE_URL}/rest/v1/news_raw"
+    url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {
-        'approval_status': 'eq.pending',
-        'telegram_notified': 'eq.false',
         'select': '*',
         'order': 'created_at.desc',
         'limit': 5
@@ -43,9 +41,12 @@ def fetch_pending_articles():
     try:
         response = requests.get(url, headers=SUPABASE_HEADERS, params=params)
         if response.status_code == 200:
-            return response.json()
+            articles = response.json()
+            # Filter out already notified articles (we'll track this differently)
+            return [a for a in articles if not a.get('sent_to_telegram')]
         else:
             log(f"Error fetching articles: {response.status_code}")
+            log(f"Response: {response.text}")
             return []
     except Exception as e:
         log(f"Exception: {e}")
@@ -60,11 +61,11 @@ def send_telegram_notification(article):
         return None
     
     # Build message
-    title = article.get('Title_Original', 'Untitled')
-    summary = article.get('Summary_Short', article.get('Body_Original', '')[:200])
-    category = article.get('Category', 'News')
-    source = article.get('Source_Name', 'Unknown')
+    title = article.get('headline', 'Untitled')
+    summary = article.get('summary', '')[:200]
+    source = article.get('source', 'Unknown')
     article_id = article.get('id')
+    source_url = article.get('source_url', '#')
     
     message = f"""📰 <b>New Article for Review</b>
 
@@ -72,14 +73,12 @@ def send_telegram_notification(article):
 
 <i>{summary[:300]}...</i>
 
-<b>Category:</b> {category}
 <b>Source:</b> {source}
 <b>ID:</b> <code>{article_id}</code>
 
 <b>Actions:</b>
 ✅ Approve: /approve_{article_id}
 ❌ Reject: /reject_{article_id}
-📝 Edit: /edit_{article_id}
     """
     
     # Send to Telegram
@@ -95,7 +94,7 @@ def send_telegram_notification(article):
                     {'text': '❌ Reject', 'callback_data': f'reject:{article_id}'}
                 ],
                 [
-                    {'text': '📝 View Source', 'url': article.get('Source_URL', '#')}
+                    {'text': '📝 View Source', 'url': source_url}
                 ]
             ]
         }
@@ -118,11 +117,10 @@ def send_telegram_notification(article):
 
 def mark_as_notified(article_id, message_id):
     """Mark article as notified in Supabase."""
-    url = f"{SUPABASE_URL}/rest/v1/news_raw"
+    url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
     data = {
-        'telegram_notified': True,
-        'telegram_message_id': str(message_id)
+        'sent_to_telegram': True
     }
     
     try:
@@ -135,12 +133,10 @@ def mark_as_notified(article_id, message_id):
 
 def approve_article(article_id):
     """Approve an article for publishing."""
-    url = f"{SUPABASE_URL}/rest/v1/news_raw"
+    url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
     data = {
-        'approval_status': 'approved',
-        'reviewed_at': datetime.now().isoformat(),
-        'Status': 'Approved'
+        'status': 'Approved'
     }
     
     try:
@@ -158,13 +154,10 @@ def approve_article(article_id):
 
 def reject_article(article_id, reason=''):
     """Reject an article."""
-    url = f"{SUPABASE_URL}/rest/v1/news_raw"
+    url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
     data = {
-        'approval_status': 'rejected',
-        'reviewed_at': datetime.now().isoformat(),
-        'reviewer_notes': reason,
-        'Status': 'Rejected'
+        'status': 'Rejected'
     }
     
     try:
