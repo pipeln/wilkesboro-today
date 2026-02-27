@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Telegram Approval Bot for Wilkesboro Today
-Sends pending articles to Telegram for manual approval with image handling
+Simplified Telegram Approval Bot for Wilkesboro Today
+Approve/Reject only → Auto-publishes to website
 """
 
 import os
@@ -9,6 +9,7 @@ import sys
 import json
 import requests
 import re
+import base64
 from datetime import datetime
 from urllib.parse import quote
 
@@ -19,43 +20,46 @@ TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
 
+# WordPress/Wilkesboro Today API
+WP_API_URL = os.environ.get('WP_API_URL', 'https://wilkesborotoday.com/wp-json/wp/v2')
+WP_USERNAME = os.environ.get('WP_USERNAME', '')
+WP_APP_PASSWORD = os.environ.get('WP_APP_PASSWORD', '')
+
 SUPABASE_HEADERS = {
     'apikey': SUPABASE_KEY,
     'Authorization': f'Bearer {SUPABASE_KEY}',
     'Content-Type': 'application/json'
 }
 
-DEFAULT_IMAGE_URL = "https://wilkesborotoday.com/wp-content/uploads/2026/02/default-news.jpg"
+DEFAULT_IMAGE_ID = 0  # WordPress media ID for default image
 
 def log(message):
     timestamp = datetime.now().strftime('%H:%M:%S')
     print(f"[{timestamp}] {message}")
 
 
-def extract_images_from_url(url):
-    """Try to extract images from article URL."""
-    images = []
+def extract_first_image(url):
+    """Extract first good image from article URL."""
     try:
         response = requests.get(url, timeout=10, headers={'User-Agent': 'Mozilla/5.0'})
         if response.status_code == 200:
-            # Look for image URLs in the HTML
-            img_pattern = r'https?://[^\s"\'<>]+\.(?:jpg|jpeg|png|gif|webp)'
+            # Look for image URLs
+            img_pattern = r'https?://[^\s"\'<>
+]+\.(?:jpg|jpeg|png)'
             found = re.findall(img_pattern, response.text, re.IGNORECASE)
-            # Filter for likely article images (not logos/icons)
-            for img in found[:5]:  # Limit to first 5
-                if any(x in img.lower() for x in ['logo', 'icon', 'avatar', 'button']):
+            for img in found:
+                # Skip logos, icons, small images
+                if any(x in img.lower() for x in ['logo', 'icon', 'avatar', 'button', 'thumb']):
                     continue
-                if img not in images:
-                    images.append(img)
+                return img
     except Exception as e:
-        log(f"Could not extract images: {e}")
-    return images[:3]  # Return max 3 images
+        log(f"Could not extract image: {e}")
+    return None
 
 
-def generate_ai_image(prompt, article_id):
+def generate_ai_image(prompt):
     """Generate an AI image using Gemini."""
     if not GEMINI_API_KEY:
-        log("No Gemini API key configured")
         return None
     
     try:
@@ -64,7 +68,7 @@ def generate_ai_image(prompt, article_id):
         payload = {
             "contents": [{
                 "parts": [{
-                    "text": f"Create a professional news illustration for: {prompt}. Style: Clean, professional news photography style."
+                    "text": f"Professional news photo for: {prompt}. Clean, journalistic style."
                 }]
             }],
             "generationConfig": {
@@ -75,53 +79,103 @@ def generate_ai_image(prompt, article_id):
         response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'})
         if response.status_code == 200:
             data = response.json()
-            # Extract image from response
             for part in data.get('candidates', [{}])[0].get('content', {}).get('parts', []):
                 if 'inlineData' in part:
-                    return part['inlineData']['data']  # Base64 image data
-        log(f"Image generation response: {response.text[:200]}")
+                    return part['inlineData']['data']  # Base64
     except Exception as e:
-        log(f"Image generation error: {e}")
+        log(f"Image generation failed: {e}")
     return None
 
 
-def send_confirmation_message(article, action):
-    """Send confirmation message after approval/rejection."""
+def upload_image_to_wordpress(image_url_or_data, title):
+    """Upload image to WordPress and return media ID."""
+    if not WP_USERNAME or not WP_APP_PASSWORD:
+        log("WordPress credentials not configured")
+        return DEFAULT_IMAGE_ID
+    
+    try:
+        auth = base64.b64encode(f"{WP_USERNAME}:{WP_APP_PASSWORD}".encode()).decode()
+        headers = {'Authorization': f'Basic {auth}'}
+        
+        # If it's a URL, download it
+        if image_url_or_data.startswith('http'):
+            img_response = requests.get(image_url_or_data, timeout=30)
+            if img_response.status_code != 200:
+                return DEFAULT_IMAGE_ID
+            image_data = img_response.content
+            filename = f"news-{datetime.now().strftime('%Y%m%d')}.jpg"
+        else:
+            # Base64 data from AI generation
+            image_data = base64.b64decode(image_url_or_data)
+            filename = f"ai-generated-{datetime.now().strftime('%Y%m%d')}.jpg"
+        
+        # Upload to WordPress
+        files = {'file': (filename, image_data, 'image/jpeg')}
+        response = requests.post(f"{WP_API_URL}/media", headers=headers, files=files)
+        
+        if response.status_code == 201:
+            return response.json().get('id', DEFAULT_IMAGE_ID)
+    except Exception as e:
+        log(f"Image upload failed: {e}")
+    
+    return DEFAULT_IMAGE_ID
+
+
+def publish_to_wordpress(article, image_id=None):
+    """Publish article to WordPress site."""
+    if not WP_USERNAME or not WP_APP_PASSWORD:
+        log("WordPress credentials not configured - article not published")
+        return False
+    
+    try:
+        auth = base64.b64encode(f"{WP_USERNAME}:{WP_APP_PASSWORD}".encode()).decode()
+        headers = {
+            'Authorization': f'Basic {auth}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Prepare post content
+        post_data = {
+            'title': article.get('headline', 'Untitled'),
+            'content': f"<p>{article.get('summary', '')}</p><p>Source: <a href='{article.get('source_url', '#')}'>{article.get('source', 'Unknown')}</a></p>",
+            'status': 'publish',  # Publish immediately
+            'categories': [1],  # Default category ID
+            'tags': article.get('tags', []),
+            'featured_media': image_id if image_id else DEFAULT_IMAGE_ID
+        }
+        
+        response = requests.post(f"{WP_API_URL}/posts", headers=headers, json=post_data)
+        
+        if response.status_code == 201:
+            post = response.json()
+            log(f"✅ Published to website: {post.get('link', '')}")
+            return post.get('link', '')
+        else:
+            log(f"❌ WordPress publish failed: {response.status_code}")
+            return False
+    except Exception as e:
+        log(f"❌ Publish error: {e}")
+        return False
+
+
+def send_telegram_message(text, parse_mode='HTML'):
+    """Send message to Telegram."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        return
+        return None
     
-    title = article.get('headline', 'Untitled')[:50]
-    article_id = article.get('id', '')[:8]
-    
-    if action == 'approved':
-        message = f"""✅ <b>Article Approved & Published!</b>
-
-<b>{title}...</b>
-ID: <code>{article_id}</code>
-
-The article is now live on the website.
-Image: {article.get('image_url', 'Default image used')}
-"""
-    else:
-        message = f"""❌ <b>Article Rejected</b>
-
-<b>{title}...</b>
-ID: <code>{article_id}</code>
-
-The article has been removed from the queue.
-"""
-    
-    telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         'chat_id': TELEGRAM_CHAT_ID,
-        'text': message,
-        'parse_mode': 'HTML'
+        'text': text,
+        'parse_mode': parse_mode
     }
     
     try:
-        requests.post(telegram_url, json=payload)
+        response = requests.post(url, json=payload)
+        return response.status_code == 200
     except Exception as e:
-        log(f"Failed to send confirmation: {e}")
+        log(f"Telegram send failed: {e}")
+        return False
 
 
 def fetch_pending_articles():
@@ -130,216 +184,181 @@ def fetch_pending_articles():
     params = {
         'select': '*',
         'order': 'created_at.desc',
-        'limit': 5
+        'limit': 10
     }
     
     try:
         response = requests.get(url, headers=SUPABASE_HEADERS, params=params)
         if response.status_code == 200:
             articles = response.json()
-            return [a for a in articles if not a.get('sent_to_telegram')]
-        else:
-            log(f"Error fetching articles: {response.status_code}")
-            return []
+            # Filter to only those not yet processed
+            return [a for a in articles if a.get('status') not in ['Approved', 'Rejected', 'Published']]
+        return []
     except Exception as e:
-        log(f"Exception: {e}")
+        log(f"Fetch error: {e}")
         return []
 
 
-def send_telegram_notification(article):
-    """Send article to Telegram for approval with image options."""
-    
+def send_article_for_approval(article):
+    """Send article to Telegram with simple approve/reject buttons."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        log("Telegram credentials not configured")
+        log("Telegram not configured")
         return None
     
     title = article.get('headline', 'Untitled')
-    summary = article.get('summary', '')[:300]
+    summary = article.get('summary', '')[:250]
     source = article.get('source', 'Unknown')
     article_id = article.get('id')
     source_url = article.get('source_url', '#')
     
-    # Extract images from article
-    existing_images = extract_images_from_url(source_url) if source_url != '#' else []
-    
-    # Build message
-    message = f"""📰 <b>New Article for Review</b>
+    message = f"""📰 <b>ARTICLE FOR APPROVAL</b>
 
 <b>{title}</b>
 
-<i>{summary}...</i>
+{summary}...
 
 <b>Source:</b> {source}
 <b>ID:</b> <code>{article_id}</code>
 
-<b>Image Options:</b>
-{"🖼 Found " + str(len(existing_images)) + " images from article" if existing_images else "⚠️ No images found in article"}
-"""
+Reply with:
+✅ <b>approve</b> - Publish to website
+❌ <b>reject</b> - Discard"""
     
-    # First, send any existing images found
-    if existing_images:
-        telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMediaGroup"
-        media = []
-        for i, img_url in enumerate(existing_images[:3]):
-            media.append({
-                'type': 'photo',
-                'media': img_url,
-                'caption': f'Image {i+1} from article' if i == 0 else ''
-            })
-        
-        try:
-            requests.post(telegram_url, json={
-                'chat_id': TELEGRAM_CHAT_ID,
-                'media': media
-            })
-        except Exception as e:
-            log(f"Could not send images: {e}")
-    
-    # Send approval message with buttons
-    telegram_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    
-    # Build keyboard with image options
-    keyboard = [
-        [
-            {'text': '✅ Approve', 'callback_data': f'approve:{article_id}'},
-            {'text': '❌ Reject', 'callback_data': f'reject:{article_id}'}
-        ]
-    ]
-    
-    # Add image option buttons
-    if existing_images:
-        keyboard.append([
-            {'text': '🖼 Use Article Image', 'callback_data': f'img_existing:{article_id}'}
-        ])
-    
-    keyboard.extend([
-        [
-            {'text': '🎨 Generate AI Image', 'callback_data': f'img_generate:{article_id}'},
-            {'text': '📄 Use Default Image', 'callback_data': f'img_default:{article_id}'}
-        ],
-        [
-            {'text': '📝 View Source', 'url': source_url}
-        ]
-    ])
-    
+    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         'chat_id': TELEGRAM_CHAT_ID,
         'text': message,
         'parse_mode': 'HTML',
         'reply_markup': {
-            'inline_keyboard': keyboard
+            'inline_keyboard': [[
+                {'text': '✅ APPROVE', 'callback_data': f'approve:{article_id}'},
+                {'text': '❌ REJECT', 'callback_data': f'reject:{article_id}'}
+            ], [
+                {'text': '📖 Read Full Article', 'url': source_url}
+            ]]
         }
     }
     
     try:
-        response = requests.post(telegram_url, json=payload)
+        response = requests.post(url, json=payload)
         if response.status_code == 200:
-            result = response.json()
-            message_id = result['result']['message_id']
-            log(f"✅ Sent to Telegram: {title[:50]}...")
-            return message_id
+            log(f"✅ Sent: {title[:40]}...")
+            return response.json()['result']['message_id']
         else:
             log(f"❌ Telegram error: {response.text}")
-            return None
     except Exception as e:
-        log(f"❌ Exception: {e}")
-        return None
+        log(f"❌ Send error: {e}")
+    return None
 
 
-def mark_as_notified(article_id, message_id):
-    """Mark article as notified in Supabase."""
+def update_article_status(article_id, status, extra_data=None):
+    """Update article status in Supabase."""
     url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
-    data = {'sent_to_telegram': True}
+    data = {'status': status}
+    if extra_data:
+        data.update(extra_data)
     
     try:
         response = requests.patch(url, headers=SUPABASE_HEADERS, params=params, json=data)
         return response.status_code == 200
     except Exception as e:
-        log(f"Error marking as notified: {e}")
+        log(f"Update error: {e}")
         return False
 
 
-def update_article_image(article_id, image_url, image_source='default'):
-    """Update article with selected image."""
-    url = f"{SUPABASE_URL}/rest/v1/news_items"
-    params = {'id': f'eq.{article_id}'}
-    data = {
-        'image_url': image_url,
-        'image_source': image_source
-    }
+def approve_and_publish(article_id):
+    """Approve article and publish to website."""
+    log(f"Approving article {article_id}...")
     
-    try:
-        response = requests.patch(url, headers=SUPABASE_HEADERS, params=params, json=data)
-        return response.status_code == 200
-    except Exception as e:
-        log(f"Error updating image: {e}")
-        return False
-
-
-def approve_article(article_id, image_choice='default'):
-    """Approve an article for publishing."""
-    # First get article details
+    # Get article details
     url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
     
     try:
-        # Get article
         response = requests.get(url, headers=SUPABASE_HEADERS, params=params)
-        article = response.json()[0] if response.status_code == 200 else None
+        if response.status_code != 200 or not response.json():
+            log("❌ Article not found")
+            return False
         
-        # Handle image based on choice
-        if image_choice == 'generate' and article:
-            log("Generating AI image...")
-            image_data = generate_ai_image(article.get('headline', ''), article_id)
-            if image_data:
-                # Would need to upload to storage and get URL
-                update_article_image(article_id, 'ai_generated', 'ai')
+        article = response.json()[0]
+        title = article.get('headline', 'Untitled')
+        
+        # Step 1: Get image
+        log("Getting image...")
+        image_url = extract_first_image(article.get('source_url', ''))
+        
+        if image_url:
+            log(f"Found article image: {image_url[:50]}...")
+            image_id = upload_image_to_wordpress(image_url, title)
+        else:
+            log("No article image found, generating AI image...")
+            ai_image = generate_ai_image(title)
+            if ai_image:
+                image_id = upload_image_to_wordpress(ai_image, title)
             else:
-                update_article_image(article_id, DEFAULT_IMAGE_URL, 'default')
-        elif image_choice == 'default':
-            update_article_image(article_id, DEFAULT_IMAGE_URL, 'default')
+                log("Using default image")
+                image_id = DEFAULT_IMAGE_ID
         
-        # Update status
-        data = {'status': 'Approved', 'approved_at': datetime.now().isoformat()}
-        response = requests.patch(url, headers=SUPABASE_HEADERS, params=params, json=data)
+        # Step 2: Publish to WordPress
+        log("Publishing to website...")
+        post_url = publish_to_wordpress(article, image_id)
         
-        if response.status_code == 200:
-            log(f"✅ Article {article_id} approved")
-            if article:
-                send_confirmation_message(article, 'approved')
-            return True
+        # Step 3: Update status
+        update_data = {
+            'status': 'Published',
+            'published_at': datetime.now().isoformat(),
+            'published_url': post_url if post_url else '',
+            'wordpress_post_id': post_url.split('/')[-2] if post_url and '/' in post_url else None
+        }
+        update_article_status(article_id, 'Published', update_data)
+        
+        # Step 4: Send confirmation
+        if post_url:
+            send_telegram_message(
+                f"✅ <b>Article Published!</b>\n\n"
+                f"<b>{title[:60]}...</b>\n"
+                f"🔗 <a href='{post_url}'>View on Website</a>\n\n"
+                f"Live in ~2 minutes"
+            )
         else:
-            log(f"❌ Failed to approve: {response.status_code}")
-            return False
+            send_telegram_message(
+                f"✅ <b>Article Approved</b>\n\n"
+                f"<b>{title[:60]}...</b>\n\n"
+                f"⚠️ Could not auto-publish. Manual publish needed."
+            )
+        
+        return True
+        
     except Exception as e:
-        log(f"❌ Exception: {e}")
+        log(f"❌ Approval failed: {e}")
+        send_telegram_message(f"❌ <b>Failed to publish article {article_id}</b>\nError: {str(e)[:100]}")
         return False
 
 
-def reject_article(article_id, reason=''):
-    """Reject an article."""
+def reject_article(article_id):
+    """Reject article."""
+    log(f"Rejecting article {article_id}...")
+    
+    # Get article for confirmation
     url = f"{SUPABASE_URL}/rest/v1/news_items"
     params = {'id': f'eq.{article_id}'}
     
     try:
-        # Get article for confirmation
         response = requests.get(url, headers=SUPABASE_HEADERS, params=params)
-        article = response.json()[0] if response.status_code == 200 else None
+        article = response.json()[0] if response.json() else None
         
-        data = {'status': 'Rejected', 'rejected_at': datetime.now().isoformat()}
-        response = requests.patch(url, headers=SUPABASE_HEADERS, params=params, json=data)
+        update_article_status(article_id, 'Rejected', {'rejected_at': datetime.now().isoformat()})
         
-        if response.status_code == 200:
-            log(f"❌ Article {article_id} rejected")
-            if article:
-                send_confirmation_message(article, 'rejected')
-            return True
-        else:
-            log(f"❌ Failed to reject: {response.status_code}")
-            return False
+        if article:
+            send_telegram_message(
+                f"❌ <b>Article Rejected</b>\n\n"
+                f"<b>{article.get('headline', 'Untitled')[:60]}...</b>\n"
+                f"ID: <code>{article_id}</code>"
+            )
+        return True
     except Exception as e:
-        log(f"❌ Exception: {e}")
+        log(f"❌ Reject error: {e}")
         return False
 
 
@@ -348,39 +367,36 @@ def main():
     log("TELEGRAM APPROVAL BOT")
     log("="*60)
     
+    # Check config
     if not all([SUPABASE_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID]):
-        log("❌ Missing configuration. Check environment variables.")
+        log("❌ Missing config: SUPABASE_ANON_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID")
         return
     
-    log("Fetching pending articles...")
+    # Fetch and send pending articles
     articles = fetch_pending_articles()
     
     if not articles:
-        log("No pending articles to notify.")
+        log("No pending articles")
         return
     
-    log(f"Found {len(articles)} pending articles")
+    log(f"Found {len(articles)} articles to approve")
     
     for article in articles:
-        message_id = send_telegram_notification(article)
-        if message_id:
-            mark_as_notified(article['id'], message_id)
+        send_article_for_approval(article)
     
     log("="*60)
-    log("Done!")
+    log("Done! Check Telegram to approve/reject")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         action = sys.argv[1]
-        article_id = sys.argv[2] if len(sys.argv) > 2 else None
-        image_choice = sys.argv[3] if len(sys.argv) > 3 else 'default'
+        article_id = sys.argv[2]
         
-        if action == 'approve' and article_id:
-            approve_article(article_id, image_choice)
-        elif action == 'reject' and article_id:
-            reason = sys.argv[3] if len(sys.argv) > 3 else ''
-            reject_article(article_id, reason)
+        if action == 'approve':
+            approve_and_publish(article_id)
+        elif action == 'reject':
+            reject_article(article_id)
         else:
             main()
     else:
