@@ -174,14 +174,13 @@ def generate_executive_summary():
     agents = get_agent_status()
     pending = get_pending_approvals()
     
-    # Build report
-    report = f"""
-📊 **DAILY BUSINESS REPORT**
+    # Build report - use simple formatting to avoid Markdown issues
+    report = f"""📊 DAILY BUSINESS REPORT
 {now}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🏢 **DATABASE STATUS**
+🏢 DATABASE STATUS
 Status: {db_health['status']}
 Connection: {db_health['connection']}
 Total Records: {db_health['total_records']:,}
@@ -196,10 +195,10 @@ Table Breakdown:
     for table, count in db_health.get('table_counts', {}).items():
         report += f"• {table}: {count:,}\n"
     
-    report += f"""
+    report += """
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🤖 **AGENT STATUS REPORT**
+🤖 AGENT STATUS REPORT
 """
     
     # Group agents by category
@@ -208,7 +207,7 @@ Table Breakdown:
         by_category[agent['category']].append((agent_id, agent))
     
     for category, agent_list in by_category.items():
-        report += f"\n**{category}**\n"
+        report += f"\n{category}\n"
         for agent_id, agent in agent_list:
             report += f"""
 {agent['status']} {agent['name']}
@@ -221,13 +220,13 @@ Table Breakdown:
     report += f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📋 **PENDING ACTIONS**
+📋 PENDING ACTIONS
 • New items awaiting review: {pending['new_items']}
 • Items to send to Telegram: {pending['awaiting_telegram']}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-💡 **RECOMMENDATIONS**
+💡 RECOMMENDATIONS
 """
     
     # Add recommendations based on status
@@ -263,14 +262,22 @@ def send_telegram_report(report_text):
         return False
     
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    
+    # Truncate if too long (Telegram limit is 4096)
+    if len(report_text) > 4000:
+        report_text = report_text[:3997] + "..."
+    
     payload = {
         'chat_id': TELEGRAM_CHAT_ID,
-        'text': report_text,
-        'parse_mode': 'Markdown'
+        'text': report_text
+        # Removed parse_mode to avoid Markdown errors
     }
     
     try:
         response = requests.post(url, json=payload)
+        if response.status_code != 200:
+            print(f"Telegram API error: {response.status_code}")
+            print(f"Response: {response.text[:200]}")
         return response.status_code == 200
     except Exception as e:
         print(f"Failed to send Telegram: {e}")
