@@ -33,7 +33,7 @@ echo "   ✓ Dependencies ready"
 echo ""
 echo "3. Cleaning test data..."
 cd /root/.openclaw/workspace
-python3 cleanup_data.py
+python3 cleanup_fast.py
 
 # Set up cron jobs
 echo ""
