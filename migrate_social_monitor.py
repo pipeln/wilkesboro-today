@@ -214,7 +214,7 @@ def main():
     
     total_stats = {'news_items': 0, 'events': 0, 'alerts': 0, 'jobs': 0, 'government_notices': 0, 'errors': 0}
     
-    for filepath in files:
+    for filepath in files[:1]:  # Process only 1 file at a time for testing
         print(f"\nProcessing: {filepath.name}")
         
         try:
