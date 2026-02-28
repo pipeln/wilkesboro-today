@@ -12,10 +12,6 @@ import { getArticles, getEvents } from '../utils/supabase.js';
 const articles = await getArticles(6);
 const events = await getEvents(5);
 
-// Featured article (first one)
-const featuredArticle = articles[0] || null;
-const latestNews = articles.slice(1, 4);
-
 // Demo articles fallback if Supabase fails
 const demoArticles = [
   {
@@ -124,9 +120,11 @@ const demoEvents = [
   }
 ];
 
-const featuredArticle = demoArticles[0];
-const latestNews = demoArticles.slice(1, 4);
-const events = demoEvents;
+// Use Supabase data if available, otherwise use demo data
+const displayArticles = articles.length > 0 ? articles : demoArticles;
+const displayEvents = events.length > 0 ? events : demoEvents;
+const featuredArticle = displayArticles[0] || null;
+const latestNews = displayArticles.slice(1, 4);
 ---
 
 <Layout>
