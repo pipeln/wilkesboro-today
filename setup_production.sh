@@ -52,7 +52,7 @@ cat > $CRON_FILE << 'EOF'
 5 */4 * * * cd /root/.openclaw/workspace && python3 telegram_approval_bot.py >> logs/cron_telegram.log 2>&1
 
 # Build and deploy website
-10 */4 * * * cd /root/.openclaw/workspace && python3 build_website.py >> logs/cron_build.log 2>&1
+10 */4 * * * cd /root/.openclaw/workspace && python3 deploy_cloudflare.py >> logs/cron_deploy.log 2>&1
 
 # Daily cleanup at 3 AM
 0 3 * * * cd /root/.openclaw/workspace && python3 cleanup_data.py >> logs/cron_cleanup.log 2>&1
