@@ -1,0 +1,288 @@
+---
+// Article Detail Page - Links to external source
+import Layout from '../layouts/Layout.astro';
+
+// Get article ID from URL
+const { id } = Astro.params;
+
+// Demo articles database (in production, fetch from AITable)
+const articles = {
+  'superintendent-byrd-passes-away': {
+    title: 'Wilkes County Schools Superintendent Mark Byrd Passes Away',
+    summary: 'Superintendent Mark Byrd, 54, was found dead at his residence on February 20. The NCSBI is investigating. Dr. Westley Wood has been appointed interim superintendent.',
+    category: 'Breaking',
+    source: 'Journal Patriot',
+    sourceUrl: 'https://www.journalpatriot.com/news/superintendent-byrd-found-dead-from-apparent-gunshot/article_4367622b-bb8a-55ed-b4ed-2b5a5517f1d1.html',
+    date: '2026-02-20',
+    author: 'Journal Patriot Staff',
+    image: '/images/default-hero.jpg',
+    body: `Wilkes County School Superintendent Mark Byrd, 54, was found dead Friday at his residence on Oak Ridge Church Road in Hays from an apparent self-inflicted gunshot wound, according to the Wilkes County Sheriff's Office.
+
+The Wilkes County Sheriff's Office received a call at 3:14 p.m. Friday and responded to Byrd's residence at 1025 Oak Ridge Church Road. Upon arrival, deputies found Byrd deceased.
+
+The NC State Bureau of Investigation is assisting with the investigation. No foul play is suspected.
+
+Byrd had served as superintendent since 2019. The Wilkes County Board of Education appointed Dr. Westley Wood as interim superintendent during an emergency meeting Monday.
+
+Crisis counselors have been made available at all Wilkes County Schools for students and staff.
+
+The Wilkes County Schools family is deeply saddened by the loss of Superintendent Mark Byrd. Our thoughts and prayers are with his family during this difficult time, said Board of Education Chairman Randy Edwards in a statement.
+
+Funeral arrangements are pending.`
+  },
+  'commissioners-meeting-march-5': {
+    title: 'County Commissioners Meeting Rescheduled to March 5',
+    summary: 'The Wilkes County Board of Commissioners meeting has been moved from March 3 to Thursday, March 5, 2026 at 5:00 PM.',
+    category: 'Government',
+    source: 'Wilkes County Gov',
+    sourceUrl: 'https://www.wilkescounty.net',
+    date: '2026-02-26',
+    author: 'Wilkes County',
+    image: '/images/default-thumbnail.jpg',
+    body: `The Wilkes County Board of Commissioners has announced that their regular meeting scheduled for March 3, 2026 has been rescheduled to Thursday, March 5, 2026 at 5:00 PM.
+
+The meeting will be held in the Commissioners' Meeting Room at 110 North Street, Wilkesboro.
+
+Items on the agenda include:
+- Review of county budget proposals
+- Discussion of infrastructure projects
+- Public comments
+
+Residents are encouraged to attend or submit comments in advance.`
+  },
+  'wilkesboro-comic-con-feb-28': {
+    title: 'Wilkesboro Comic Con Returns February 28',
+    summary: 'The annual Wilkesboro Comic Con is back this Saturday with vendors, cosplay, and family-friendly activities.',
+    category: 'Events',
+    source: 'wilkescomiccon.com',
+    sourceUrl: 'https://wilkescomiccon.com',
+    date: '2026-02-26',
+    author: 'Comic Con Organizers',
+    image: '/images/default-thumbnail.jpg',
+    body: `Wilkesboro Comic Con returns this Saturday, February 28, 2026 for a day of fun, fandom, and family-friendly entertainment.
+
+The event features:
+- Over 50 vendor booths
+- Cosplay contest with prizes
+- Guest artists and writers
+- Gaming tournaments
+- Photo opportunities
+- Food trucks
+
+Doors open at 10:00 AM and the event runs until 6:00 PM. Admission is $10 for adults, $5 for children under 12, and free for children under 5.
+
+The event will be held at the Wilkesboro Community Center. Parking is available on-site.`
+  },
+  'nascar-returns-july-2026': {
+    title: 'NASCAR Returning to North Wilkesboro Speedway',
+    summary: 'The NASCAR Craftsman Truck Series and Cup Series will race at North Wilkesboro Speedway on July 17-19, 2026.',
+    category: 'Sports',
+    source: 'North Wilkesboro Speedway',
+    sourceUrl: 'https://www.northwilkesborospeedway.com',
+    date: '2026-02-26',
+    author: 'Speedway Staff',
+    image: '/images/default-thumbnail.jpg',
+    body: `NASCAR is returning to North Wilkesboro Speedway for a historic race weekend July 17-19, 2026.
+
+The weekend schedule includes:
+- Friday, July 17: zMAX CARS Tour Doubleheader
+- Saturday, July 18: NASCAR Craftsman Truck Series
+- Sunday, July 19: NASCAR Cup Series
+
+This marks the first time the NASCAR Cup Series has raced at North Wilkesboro Speedway since 1996.
+
+Tickets go on sale March 1, 2026. Fans are encouraged to purchase early as demand is expected to be high.
+
+The speedway has undergone significant renovations to prepare for the return of NASCAR's top series.`
+  },
+  'apple-festival-october-3': {
+    title: 'Brushy Mountain Apple Festival Set for October 3',
+    summary: 'One of the largest one-day arts and crafts festivals in the Southeast returns to downtown North Wilkesboro.',
+    category: 'Events',
+    source: 'Brushy Mountain Ruritan',
+    sourceUrl: 'http://www.applefestival.net',
+    date: '2026-02-26',
+    author: 'Festival Committee',
+    image: '/images/default-thumbnail.jpg',
+    body: `The 45th Annual Brushy Mountain Apple Festival will take place Saturday, October 3, 2026 in downtown North Wilkesboro.
+
+The festival features:
+- 100+ arts and crafts vendors
+- Live music on multiple stages
+- Food vendors and apple-themed treats
+- Antique car show
+- Children's activities
+- Apple products and baked goods
+
+The festival is one of the largest one-day arts and crafts festivals in the Southeast, attracting over 100,000 visitors annually.
+
+Admission is free. The festival runs from 9:00 AM to 5:00 PM, rain or shine.`
+  },
+  'agricultural-fair-october-2026': {
+    title: 'Wilkes County Agricultural Fair October 1-4',
+    summary: 'Four days of rides, exhibits, livestock shows, and family fun at the Wilkes County Agricultural Fairgrounds.',
+    category: 'Events',
+    source: 'Wilkes County Fair',
+    sourceUrl: 'https://www.ces.ncsu.edu',
+    date: '2026-02-26',
+    author: 'Fair Board',
+    image: '/images/default-thumbnail.jpg',
+    body: `The Wilkes County Agricultural Fair returns October 1-4, 2026 at the Wilkes County Agricultural Fairgrounds.
+
+Fair highlights include:
+- Carnival rides and games
+- Livestock shows and competitions
+- Agricultural exhibits
+- Live entertainment
+- Food vendors
+- Demolition derby
+- Beauty pageants
+
+The fair celebrates Wilkes County's agricultural heritage and provides family fun for all ages.
+
+Gates open at 5:00 PM Thursday and Friday, and at noon Saturday and Sunday. Admission is $8 for adults, $4 for children 6-12, and free for children under 6.`
+  }
+};
+
+const article = articles[id] || null;
+
+if (!article) {
+  return Astro.redirect('/404');
+}
+---
+
+<Layout>
+  <fragment slot="head">
+    <title>{article.title} - Wilkesboro Today</title>
+    <meta name="description" content={article.summary}>
+  </fragment>
+
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-gray-500 mb-4">
+      <a href="/" class="hover:text-blue-700">Home</a>
+      <span class="mx-2">/</span>
+      <a href={`/news?category=${article.category.toLowerCase()}`} class="hover:text-blue-700">{article.category}</a>
+      <span class="mx-2">/</span>
+      <span class="text-gray-900">Article</span>
+    </nav>
+
+    <!-- Category Badge -->
+    <div class="mb-4">
+      <span class="inline-block bg-blue-700 text-white text-sm font-bold px-3 py-1 rounded-full">
+        {article.category}
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+      {article.title}
+    </h1>
+
+    <!-- Meta -->
+    <div class="flex items-center text-gray-600 text-sm mb-6 pb-6 border-b border-gray-200">
+      <span>{article.source}</span>
+      <span class="mx-2">•</span>
+      <span>{new Date(article.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+      <span class="mx-2">•</span>
+      <span>By {article.author}</span>
+    </div>
+
+    <!-- Featured Image -->
+    <div class="mb-8">
+      <img 
+        src={article.image} 
+        alt={article.title}
+        class="w-full h-auto rounded-xl shadow-lg"
+      />
+    </div>
+
+    <!-- Article Body -->
+    <div class="prose prose-lg max-w-none mb-8">
+      {article.body.split('\n\n').map(paragraph => (
+        <p class="text-gray-700 leading-relaxed mb-4">{paragraph}</p>
+      ))}
+    </div>
+
+    <!-- Read Full Story CTA -->
+    <div class="bg-blue-50 border-l-4 border-blue-700 p-6 rounded-r-lg mb-8">
+      <h3 class="font-bold text-gray-900 mb-2">Read the Full Story</h3>
+      <p class="text-gray-600 mb-4">
+        This summary is provided for your convenience. Click below to read the complete article on {article.source}.
+      </p>
+      <a 
+        href={article.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center px-6 py-3 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-800 transition"
+      >
+        Read Full Article
+        <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Share -->
+    <div class="flex items-center space-x-4 mb-8 pb-8 border-b border-gray-200">
+      <span class="text-gray-600 font-medium">Share:</span>
+      
+      <a 
+        href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-blue-600 hover:text-blue-800"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+        </svg>
+      </a>
+      
+      <a 
+        href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url)}&text=${encodeURIComponent(article.title)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-blue-400 hover:text-blue-600"
+      >
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"></path>
+        </svg>
+      </a>
+      
+      <a 
+        href={`mailto:?subject=${encodeURIComponent(article.title)}&body=${encodeURIComponent(Astro.url)}`}
+        class="text-gray-600 hover:text-gray-800"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Related Articles -->
+    <div class="mb-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">More in {article.category}</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Object.entries(articles)
+          .filter(([key, a]) => a.category === article.category && key !== id)
+          .slice(0, 2)
+          .map(([key, a]) => (
+            <a href={`/news/${key}`} class="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+              <h4 class="font-semibold text-gray-900 mb-1">{a.title}</h4>
+              <p class="text-sm text-gray-600">{a.source} • {new Date(a.date).toLocaleDateString()}</p>
+            </a>
+          ))}
+      </div>
+    </div>
+
+    <!-- Back to News -->
+    <div class="text-center">
+      <a href="/news" class="inline-flex items-center text-blue-700 hover:text-blue-900 font-medium">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to All News
+      </a>
+    </div>
+  </article>
+</Layout>

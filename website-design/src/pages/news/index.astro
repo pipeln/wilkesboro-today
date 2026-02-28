@@ -1,0 +1,124 @@
+---
+// News Listing Page
+import Layout from '../../layouts/Layout.astro';
+
+// Demo articles (in production, fetch from AITable)
+const articles = [
+  {
+    id: 'superintendent-byrd-passes-away',
+    title: 'Wilkes County Schools Superintendent Mark Byrd Passes Away',
+    summary: 'Superintendent Mark Byrd, 54, was found dead at his residence on February 20. The NCSBI is investigating. Dr. Westley Wood has been appointed interim superintendent.',
+    category: 'Breaking',
+    source: 'Journal Patriot',
+    date: '2026-02-20',
+    image: '/images/default-hero.jpg'
+  },
+  {
+    id: 'commissioners-meeting-march-5',
+    title: 'County Commissioners Meeting Rescheduled to March 5',
+    summary: 'The Wilkes County Board of Commissioners meeting has been moved from March 3 to Thursday, March 5, 2026 at 5:00 PM.',
+    category: 'Government',
+    source: 'Wilkes County Gov',
+    date: '2026-02-26',
+    image: '/images/default-thumbnail.jpg'
+  },
+  {
+    id: 'wilkesboro-comic-con-feb-28',
+    title: 'Wilkesboro Comic Con Returns February 28',
+    summary: 'The annual Wilkesboro Comic Con is back this Saturday with vendors, cosplay, and family-friendly activities.',
+    category: 'Events',
+    source: 'wilkescomiccon.com',
+    date: '2026-02-26',
+    image: '/images/default-thumbnail.jpg'
+  },
+  {
+    id: 'nascar-returns-july-2026',
+    title: 'NASCAR Returning to North Wilkesboro Speedway',
+    summary: 'The NASCAR Craftsman Truck Series and Cup Series will race at North Wilkesboro Speedway on July 17-19, 2026.',
+    category: 'Sports',
+    source: 'North Wilkesboro Speedway',
+    date: '2026-02-26',
+    image: '/images/default-thumbnail.jpg'
+  },
+  {
+    id: 'apple-festival-october-3',
+    title: 'Brushy Mountain Apple Festival Set for October 3',
+    summary: 'One of the largest one-day arts and crafts festivals in the Southeast returns to downtown North Wilkesboro.',
+    category: 'Events',
+    source: 'Brushy Mountain Ruritan',
+    date: '2026-02-26',
+    image: '/images/default-thumbnail.jpg'
+  },
+  {
+    id: 'agricultural-fair-october-2026',
+    title: 'Wilkes County Agricultural Fair October 1-4',
+    summary: 'Four days of rides, exhibits, livestock shows, and family fun at the Wilkes County Agricultural Fairgrounds.',
+    category: 'Events',
+    source: 'Wilkes County Fair',
+    date: '2026-02-26',
+    image: '/images/default-thumbnail.jpg'
+  }
+];
+
+const categories = ['All', 'Breaking', 'Government', 'Events', 'Sports', 'Community'];
+---
+
+<Layout>
+  <fragment slot="head">
+    <title>Latest News - Wilkesboro Today</title>
+    <meta name="description" content="Latest news from Wilkes County and surrounding communities.">
+  </fragment>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest News</h1>
+      
+      <!-- Category Filter -->
+      <div class="flex flex-wrap gap-2">
+        {categories.map(cat => (
+          <button class="px-4 py-2 bg-white border border-gray-300 rounded-full text-sm font-medium text-gray-700 hover:bg-blue-50 hover:border-blue-300 transition">
+            {cat}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {articles.map(article => (
+        <article class="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition">
+          <a href={`/news/${article.id}`} class="block">
+            <div class="aspect-video bg-gray-100 relative">
+              <img 
+                src={article.image} 
+                alt={article.title}
+                class="w-full h-full object-cover"
+              />
+              <span class="absolute top-3 left-3 bg-blue-700 text-white text-xs font-bold px-2 py-1 rounded">
+                {article.category}
+              </span>
+            </div>
+            
+            <div class="p-5">
+              <h2 class="font-bold text-lg text-gray-900 mb-2 line-clamp-2">{article.title}</h2>
+              <p class="text-gray-600 text-sm line-clamp-2 mb-3">{article.summary}</p>
+              
+              <div class="flex items-center justify-between text-xs text-gray-500">
+                <span>{article.source}</span>
+                <span>{new Date(article.date).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-8">
+      <button class="px-8 py-3 bg-white border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition">
+        Load More Articles
+      </button>
+    </div>
+  </div>
+</Layout>

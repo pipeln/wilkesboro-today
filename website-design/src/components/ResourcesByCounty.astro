@@ -1,0 +1,181 @@
+---
+// Resources by County Component
+const counties = [
+  {
+    name: 'Wilkes County',
+    slug: 'wilkes',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Catherine H. Barber Memorial Shelter', phone: '336-838-7120', address: '3200 Statesville Rd N, North Wilkesboro' },
+        { name: 'Wilkes Housing Authority', phone: '336-667-8979', address: 'Wilkesboro, NC' },
+        { name: 'Wilkes County DSS', phone: '336-651-7400', address: 'PO Box 119, Wilkesboro' },
+      ]},
+      { category: 'Food', items: [
+        { name: 'Samaritan Kitchen of Wilkes', phone: '', address: 'Wilkesboro', note: 'Evening meals 5pm' },
+        { name: 'Meals on Wheels', phone: '', address: 'Wilkes County', note: 'Home delivery for seniors' },
+        { name: 'SKYWATCH Food Pantry', phone: '336-838-1965', address: 'North Wilkesboro' },
+      ]},
+      { category: 'Jobs', items: [
+        { name: 'NCWorks Career Center', phone: '336-651-7400', address: 'Wilkesboro' },
+        { name: 'Goodwill Career Connections', phone: '', address: '1821 US Hwy 421, Wilkesboro' },
+      ]},
+      { category: 'Health', items: [
+        { name: 'Wilkes Health Department', phone: '336-651-7450', address: '306 College St, Wilkesboro' },
+        { name: 'Care Connection', phone: '336-667-2273', address: 'Wilkes County' },
+      ]},
+    ]
+  },
+  {
+    name: 'Watauga County',
+    slug: 'watauga',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Hospitality House', phone: '828-264-1237', address: 'Boone, NC' },
+        { name: 'Watauga Housing Authority', phone: '828-264-6378', address: 'Boone, NC' },
+      ]},
+      { category: 'Food', items: [
+        { name: 'Hunger Coalition', phone: '828-262-1628', address: 'Boone, NC' },
+        { name: 'ASU Food Pantry', phone: '', address: 'Appalachian State University' },
+      ]},
+      { category: 'Jobs', items: [
+        { name: 'NCWorks Boone', phone: '828-265-5375', address: 'Boone, NC' },
+      ]},
+    ]
+  },
+  {
+    name: 'Ashe County',
+    slug: 'ashe',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Ashe Shelter', phone: '336-846-4357', address: 'Jefferson, NC' },
+      ]},
+      { category: 'Food', items: [
+        { name: 'Ashe Outreach', phone: '336-982-4587', address: 'West Jefferson, NC' },
+      ]},
+    ]
+  },
+  {
+    name: 'Alleghany County',
+    slug: 'alleghany',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Alleghany Housing Authority', phone: '336-372-4455', address: 'Sparta, NC' },
+      ]},
+      { category: 'Food', items: [
+        { name: 'Sparta Food Pantry', phone: '336-372-8663', address: 'Sparta, NC' },
+      ]},
+    ]
+  },
+  {
+    name: 'Caldwell County',
+    slug: 'caldwell',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Caldwell Housing Authority', phone: '828-754-9705', address: 'Lenoir, NC' },
+      ]},
+      { category: 'Jobs', items: [
+        { name: 'NCWorks Lenoir', phone: '828-726-5625', address: 'Lenoir, NC' },
+      ]},
+    ]
+  },
+  {
+    name: 'Surry County',
+    slug: 'surry',
+    resources: [
+      { category: 'Housing', items: [
+        { name: 'Surry Housing Authority', phone: '336-786-6141', address: 'Mount Airy, NC' },
+      ]},
+      { category: 'Jobs', items: [
+        { name: 'NCWorks Mount Airy', phone: '336-786-4162', address: 'Mount Airy, NC' },
+      ]},
+    ]
+  }
+];
+
+const categories = ['All', 'Housing', 'Food', 'Jobs', 'Health', 'Emergency'];
+---
+
+<section class="space-y-6">
+  <!-- Filters -->
+  <div class="bg-white rounded-xl shadow-sm p-4">
+    <div class="flex flex-wrap gap-2 mb-4">
+      <span class="text-sm font-medium text-gray-700 mr-2">Category:</span>
+      {categories.map((cat, i) => (
+        <button 
+          class={`px-3 py-1 rounded-full text-sm font-medium transition ${
+            i === 0 
+              ? 'bg-primary text-white' 
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <span class="text-sm font-medium text-gray-700 mr-2">County:</span>
+      <button class="px-3 py-1 rounded-full text-sm font-medium bg-primary text-white">All</button>
+      {counties.map(county => (
+        <button class="px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+          {county.name}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- County Resources -->
+  <div class="space-y-6">
+    {counties.map(county => (
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-gradient-to-r from-primary to-primary-dark px-6 py-4">
+          <h3 class="text-lg font-bold text-white">{county.name}</h3>
+        </div>
+
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {county.resources.map(resourceCat => (
+              <div class="border border-gray-200 rounded-lg p-4">
+                <h4 class="font-semibold text-gray-900 mb-3 flex items-center">
+                  {resourceCat.category === 'Housing' && <span class="mr-2">🏠</span>}
+                  {resourceCat.category === 'Food' && <span class="mr-2">🍽️</span>}
+                  {resourceCat.category === 'Jobs' && <span class="mr-2">💼</span>}
+                  {resourceCat.category === 'Health' && <span class="mr-2">🏥</span>}
+                  {resourceCat.category === 'Emergency' && <span class="mr-2">🚨</span>}
+                  {resourceCat.category}
+                </h4>
+
+                <ul class="space-y-3">
+                  {resourceCat.items.map(item => (
+                    <li class="text-sm">
+                      <p class="font-medium text-gray-900">{item.name}</p>
+                      {item.phone && (
+                        <a href={`tel:${item.phone}`} class="text-primary hover:underline">
+                          📞 {item.phone}
+                        </a>
+                      )}
+                      <p class="text-gray-600">{item.address}</p>
+                      {item.note && <p class="text-gray-500 text-xs mt-1">{item.note}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Submit Resource CTA -->
+  <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white text-center">
+    <h3 class="text-xl font-bold mb-2">Know a resource we should add?</h3>
+    <p class="mb-4">Help us keep our community resource directory up to date.</p>
+    <a 
+      href="/submit-resource" 
+      class="inline-block px-6 py-3 bg-white text-green-600 font-semibold rounded-lg hover:bg-gray-100 transition"
+    >
+      Submit a Resource
+    </a>
+  </div>
+</section>

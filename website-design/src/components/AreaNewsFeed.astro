@@ -1,0 +1,223 @@
+---
+// Area News Feed Component - Demo Ready Content
+const localNews = [
+  {
+    id: 1,
+    title: 'Wilkes County Schools Superintendent Mark Byrd passes away',
+    source: 'Journal Patriot',
+    time: 'Feb 20, 2026',
+    category: 'Breaking',
+    url: 'https://www.journalpatriot.com/news/superintendent-byrd-found-dead-from-apparent-gunshot/article_4367622b-bb8a-55ed-b4ed-2b5a5517f1d1.html'
+  },
+  {
+    id: 2,
+    title: 'County Commissioners meeting rescheduled to March 5',
+    source: 'Wilkes County Gov',
+    time: 'Feb 26, 2026',
+    category: 'Government',
+    url: 'https://www.wilkescounty.net'
+  },
+  {
+    id: 3,
+    title: 'Wilkesboro Comic Con returns this Saturday, Feb 28',
+    source: 'wilkescomiccon.com',
+    time: 'Feb 26, 2026',
+    category: 'Events',
+    url: 'https://wilkescomiccon.com'
+  },
+  {
+    id: 4,
+    title: 'Brushy Mountain Apple Festival set for October 3, 2026',
+    source: 'Brushy Mountain Ruritan',
+    time: 'Feb 26, 2026',
+    category: 'Events',
+    url: 'http://www.applefestival.net'
+  },
+  {
+    id: 5,
+    title: 'NASCAR returning to North Wilkesboro Speedway July 17-19',
+    source: 'North Wilkesboro Speedway',
+    time: 'Feb 26, 2026',
+    category: 'Sports',
+    url: 'https://www.northwilkesborospeedway.com'
+  }
+];
+
+const stateNews = [
+  {
+    id: 1,
+    title: 'NC Primary Election Day is March 3, 2026',
+    source: 'NC State Board of Elections',
+    time: 'Feb 26, 2026',
+    category: 'Politics',
+    url: 'https://www.ncsbe.gov'
+  },
+  {
+    id: 2,
+    title: 'Early voting continues through February 28',
+    source: 'Wilkes Board of Elections',
+    time: 'Feb 26, 2026',
+    category: 'Government',
+    url: 'https://www.wilkescounty.net'
+  },
+  {
+    id: 3,
+    title: 'State health officials report flu cases declining',
+    source: 'NC DHHS',
+    time: 'Feb 25, 2026',
+    category: 'Health',
+    url: '#'
+  }
+];
+
+const nearbyNews = [
+  {
+    id: 1,
+    title: 'Mount Airy Mass Shooting suspects arrested',
+    source: 'Mount Airy News',
+    location: 'Surry County',
+    time: 'Feb 26, 2026',
+    url: 'https://www.mtairynews.com'
+  },
+  {
+    id: 2,
+    title: 'Boone approves new affordable housing development',
+    source: 'Watauga Democrat',
+    location: 'Boone',
+    time: 'Feb 25, 2026',
+    url: '#'
+  },
+  {
+    id: 3,
+    title: 'Alexander County pays off jail debt',
+    source: 'Taylorsville Times',
+    location: 'Taylorsville',
+    time: 'Feb 24, 2026',
+    url: '#'
+  }
+];
+---
+
+<section class="space-y-6">
+  <!-- Tabs -->
+  <div class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+    <button class="flex-1 py-2 px-4 rounded-md bg-white text-primary font-medium shadow-sm">
+      Local
+    </button>
+    <button class="flex-1 py-2 px-4 rounded-md text-gray-600 hover:text-gray-900">
+      State
+    </button>
+    <button class="flex-1 py-2 px-4 rounded-md text-gray-600 hover:text-gray-900">
+      Nearby
+    </button>
+  </div>
+
+  <!-- Local News -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">Wilkes County</h3>
+      <span class="text-xs text-gray-500">Live updates</span>
+    </div>
+
+    <div class="space-y-4">
+      {localNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class={`flex-shrink-0 w-2 h-2 mt-2 rounded-full ${
+              item.category === 'Breaking' ? 'bg-red-500 animate-pulse' : 'bg-primary'
+            }`}></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+                {item.category === 'Breaking' && (
+                  <span class="ml-2 text-red-600 font-medium">BREAKING</span>
+                )}
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/local" class="block text-center text-primary text-sm hover:underline mt-4">
+      More local news →
+    </a>
+  </div>
+
+  <!-- State News -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">North Carolina</h3>
+      <span class="text-xs text-gray-500">Statewide</span>
+    </div>
+
+    <div class="space-y-4">
+      {stateNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-blue-500"></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/state" class="block text-center text-primary text-sm hover:underline mt-4">
+      More state news →
+    </a>
+  </div>
+
+  <!-- Nearby Areas -->
+  <div class="bg-white rounded-xl shadow-sm p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-bold text-gray-900">Nearby Areas</h3>
+      <span class="text-xs text-gray-500">WNC Region</span>
+    </div>
+
+    <div class="space-y-4">
+      {nearbyNews.map(item => (
+        <a href={item.url} class="block group">
+          <div class="flex items-start space-x-3">
+            <span class="flex-shrink-0 w-2 h-2 mt-2 rounded-full bg-green-500"></span>
+            
+            <div class="flex-1">
+              <h4 class="font-medium text-gray-900 group-hover:text-primary transition line-clamp-2">
+                {item.title}
+              </h4>
+              
+              <div class="flex items-center text-xs text-gray-500 mt-1">
+                <span class="font-medium text-gray-600">{item.source}</span>
+                <span class="mx-1">•</span>
+                <span class="text-green-600">{item.location}</span>
+                <span class="mx-1">•</span>
+                <span>{item.time}</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <a href="/news/regional" class="block text-center text-primary text-sm hover:underline mt-4">
+      More regional news →
+    </a>
+  </div>
+</section>

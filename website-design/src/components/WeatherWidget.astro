@@ -1,0 +1,66 @@
+---
+// Weather Widget Component
+const currentWeather = {
+  temp: 54,
+  condition: 'Partly Cloudy',
+  high: 58,
+  low: 42,
+  humidity: 65,
+  wind: '8 mph NW',
+  forecast: [
+    { day: 'Wed', high: 58, low: 44, icon: '🌧️', condition: 'Rain Likely' },
+    { day: 'Thu', high: 56, low: 42, icon: '🌧️', condition: 'Showers' },
+    { day: 'Fri', high: 62, low: 38, icon: '⛅', condition: 'Partly Sunny' },
+    { day: 'Sat', high: 65, low: 40, icon: '☀️', condition: 'Sunny' },
+    { day: 'Sun', high: 64, low: 42, icon: '☀️', condition: 'Clear' },
+  ]
+};
+---
+
+<div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <p class="text-blue-100 text-sm">Wilkesboro, NC</p>
+      <p class="text-3xl font-bold">{currentWeather.temp}°F</p>
+      <p class="text-blue-100">{currentWeather.condition}</p>
+    </div>
+    <div class="text-6xl">⛅</div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-4 text-center text-sm mb-6">
+    <div class="bg-white/10 rounded-lg p-2">
+      <p class="text-blue-200">High/Low</p>
+      <p class="font-semibold">{currentWeather.high}°/{currentWeather.low}°</p>
+    </div>
+    <div class="bg-white/10 rounded-lg p-2">
+      <p class="text-blue-200">Humidity</p>
+      <p class="font-semibold">{currentWeather.humidity}%</p>
+    </div>
+    <div class="bg-white/10 rounded-lg p-2">
+      <p class="text-blue-200">Wind</p>
+      <p class="font-semibold">{currentWeather.wind}</p>
+    </div>
+  </div>
+
+  <div class="border-t border-white/20 pt-4">
+    <p class="text-sm font-semibold mb-3">5-Day Forecast</p>
+    <div class="grid grid-cols-5 gap-2 text-center">
+      {currentWeather.forecast.map(day => (
+        <div class="bg-white/10 rounded-lg p-2">
+          <p class="text-xs text-blue-200">{day.day}</p>
+          <p class="text-xl my-1">{day.icon}</p>
+          <p class="text-xs font-semibold">{day.high}°/{day.low}°</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <a 
+    href="https://weather.gov/gsp" 
+    target="_blank" 
+    rel="noopener"
+    class="block text-center text-xs text-blue-200 mt-4 hover:text-white"
+  >
+    Data from NWS Greenville-Spartanburg →
+  </a>
+</div>

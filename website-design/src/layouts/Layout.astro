@@ -1,0 +1,183 @@
+---
+// Main Layout - Base template for all pages
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;600&display=swap" rel="stylesheet">
+    
+    <slot name="head" />
+  </head>
+  <body class="bg-white text-gray-900 font-sans antialiased">
+    <!-- Breaking News Bar -->
+    <div class="bg-secondary text-white py-2 px-4 text-sm">
+      <div class="max-w-7xl mx-auto flex items-center">
+        <span class="font-bold mr-3">BREAKING:</span>
+        <div class="overflow-hidden flex-1">
+          <div class="whitespace-nowrap animate-marquee">
+            Wilkes County Schools Superintendent Mark Byrd passes away • Commissioners meeting rescheduled to March 5 • Food Truck Fridays start March 6
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="border-b border-gray-200 sticky top-0 bg-white/95 backdrop-blur z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <!-- Logo -->
+          <a href="/" class="flex items-center space-x-2">
+            <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <span class="text-white font-bold text-xl">W</span>
+            </div>
+            <div class="hidden sm:block">
+              <span class="font-bold text-xl text-gray-900">Wilkesboro</span>
+              <span class="text-primary font-semibold">Today</span>
+            </div>
+          </a>
+
+          <!-- Navigation -->
+          <nav class="hidden md:flex items-center space-x-8">
+            <a href="/" class="text-gray-700 hover:text-primary font-medium">Home</a>
+            <a href="/news" class="text-gray-700 hover:text-primary font-medium">News</a>
+            <a href="/events" class="text-gray-700 hover:text-primary font-medium">Events</a>
+            <a href="/resources" class="text-gray-700 hover:text-primary font-medium">Resources</a>
+            <a href="/submit" class="text-gray-700 hover:text-primary font-medium">Submit</a>
+          </nav>
+
+          <!-- Right Side -->
+          <div class="flex items-center space-x-4">
+            <!-- Weather Widget (simplified) -->
+            <div class="hidden lg:flex items-center text-sm text-gray-600">
+              <span class="mr-2">🌤️</span>
+              <span>Wilkesboro: 54°F</span>
+            </div>
+
+            <!-- Search -->
+            <button class="p-2 text-gray-600 hover:text-primary">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+            </button>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2 text-gray-600" id="mobile-menu-btn">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div class="hidden md:hidden border-t border-gray-200" id="mobile-menu">
+        <div class="px-4 py-3 space-y-2">
+          <a href="/" class="block py-2 text-gray-700 hover:text-primary">Home</a>
+          <a href="/news" class="block py-2 text-gray-700 hover:text-primary">News</a>
+          <a href="/events" class="block py-2 text-gray-700 hover:text-primary">Events</a>
+          <a href="/resources" class="block py-2 text-gray-700 hover:text-primary">Resources</a>
+          <a href="/submit" class="block py-2 text-gray-700 hover:text-primary">Submit News</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <!-- Brand -->
+          <div class="col-span-1 md:col-span-2">
+            <div class="flex items-center space-x-2 mb-4">
+              <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-xl">W</span>
+              </div>
+              <span class="font-bold text-xl">Wilkesboro Today</span>
+            </div>
+            <p class="text-gray-400 mb-4">Your trusted source for local news, events, and community resources in Wilkes County, North Carolina.</p>
+            
+            <!-- Newsletter -->
+            <div class="max-w-sm">
+              <p class="font-semibold mb-2">📧 Daily Newsletter</p>
+              <form class="flex" action="https://buttondown.email/api/emails/embed-subscribe/wilkesboro" method="post">
+                <input 
+                  type="email" 
+                  name="email"
+                  placeholder="your@email.com"
+                  class="flex-1 px-4 py-2 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+                  required
+                />
+                <button type="submit" class="bg-primary hover:bg-primary-dark px-4 py-2 rounded-r-lg font-medium transition">
+                  Subscribe
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div>
+            <h3 class="font-semibold mb-4">Quick Links</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="/about" class="hover:text-white">About Us</a></li>
+              <li><a href="/contact" class="hover:text-white">Contact</a></li>
+              <li><a href="/advertise" class="hover:text-white">Advertise</a></li>
+              <li><a href="/submit" class="hover:text-white">Submit News</a></li>
+              <li><a href="/privacy" class="hover:text-white">Privacy Policy</a></li>
+            </ul>
+          </div>
+
+          <!-- Categories -->
+          <div>
+            <h3 class="font-semibold mb-4">Categories</h3>
+            <ul class="space-y-2 text-gray-400">
+              <li><a href="/news/local" class="hover:text-white">Local News</a></li>
+              <li><a href="/news/schools" class="hover:text-white">Schools</a></li>
+              <li><a href="/news/government" class="hover:text-white">Government</a></li>
+              <li><a href="/events" class="hover:text-white">Events</a></li>
+              <li><a href="/resources" class="hover:text-white">Resources</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+          <p>© 2026 Wilkesboro Today. All rights reserved. Serving Wilkes County, NC.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      mobileMenuBtn?.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+</style>
