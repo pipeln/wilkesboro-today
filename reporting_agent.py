@@ -5,21 +5,21 @@ Provides executive summary updates throughout the day
 Like attending a business meeting with status from all departments
 """
 
-import os
-import json
 import requests
 from datetime import datetime, timedelta
-from supabase import create_client
 from collections import defaultdict
+from config import config
 
-SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://nahldyqwdqnifyljanxt.supabase.co')
-SUPABASE_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
-TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
+# Validate configuration on startup
+config.validate_or_exit(['SUPABASE_URL', 'SUPABASE_KEY', 'TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'])
+
+SUPABASE_URL = config.SUPABASE_URL
+SUPABASE_KEY = config.SUPABASE_KEY
+TELEGRAM_BOT_TOKEN = config.TELEGRAM_BOT_TOKEN
+TELEGRAM_CHAT_ID = config.TELEGRAM_CHAT_ID
 
 def get_supabase():
-    if not SUPABASE_KEY:
-        raise ValueError("SUPABASE_ANON_KEY not set")
+    from supabase import create_client
     return create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
