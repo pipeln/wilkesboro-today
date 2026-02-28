@@ -44,8 +44,7 @@ def extract_first_image(url):
         response = requests.get(url, timeout=10, headers={'User-Agent': 'Mozilla/5.0'})
         if response.status_code == 200:
             # Look for image URLs
-            img_pattern = r'https?://[^\s"\'<>
-]+\.(?:jpg|jpeg|png)'
+            img_pattern = r'https?://[^\s"\'<>]+\.(?:jpg|jpeg|png)'
             found = re.findall(img_pattern, response.text, re.IGNORECASE)
             for img in found:
                 # Skip logos, icons, small images
@@ -209,7 +208,11 @@ def send_article_for_approval(article):
     summary = article.get('summary', '')[:250]
     source = article.get('source', 'Unknown')
     article_id = article.get('id')
-    source_url = article.get('source_url', '#')
+    source_url = article.get('source_url') or 'https://wilkesboro.net'
+    
+    # Ensure source_url is a valid string
+    if not isinstance(source_url, str) or not source_url.startswith('http'):
+        source_url = 'https://wilkesboro.net'
     
     message = f"""📰 <b>ARTICLE FOR APPROVAL</b>
 
