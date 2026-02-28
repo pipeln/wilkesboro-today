@@ -111,7 +111,7 @@ def parse_social_monitor_file(filepath):
             # Default to news item
             data['news_items'].append({
                 'headline': content_snippet[:300],
-                'source_name': source,
+                'source': source,  # Using 'source' not 'source_name' for existing schema
                 'published_date': report_date,
                 'summary': content_snippet,
                 'category': category,
@@ -127,7 +127,7 @@ def parse_social_monitor_file(filepath):
     for category, content_text in bullets:
         data['news_items'].append({
             'headline': content_text[:300],
-            'source_name': 'Social Monitor',
+            'source': 'Social Monitor',  # Using 'source' not 'source_name'
             'published_date': report_date,
             'summary': content_text,
             'category': category.strip(),
