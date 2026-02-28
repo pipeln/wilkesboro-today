@@ -52,3 +52,4 @@ Some characters could not be decoded, and were replaced with REPLACEMENT CHARACT
 Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER.
 Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER.
 Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER.
+/usr/bin/python3: can't open file '/root/.openclaw/workspace/enhanced_populate.py': [Errno 2] No such file or directory

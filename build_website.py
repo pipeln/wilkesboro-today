@@ -12,7 +12,7 @@ from supabase import create_client
 
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://nahldyqwdqnifyljanxt.supabase.co')
 SUPABASE_KEY = os.environ.get('SUPABASE_ANON_KEY', '')
-ASTRO_BUILD_DIR = os.environ.get('ASTRO_BUILD_DIR', '/root/.openclaw/workspace/wilkesboro-website')
+ASTRO_BUILD_DIR = os.environ.get('ASTRO_BUILD_DIR', '/root/.openclaw/workspace/website-design')
 
 def get_supabase():
     if not SUPABASE_KEY:

@@ -1,0 +1,83 @@
+
+📊 **DAILY BUSINESS REPORT**
+Sunday, March 01, 2026 at 04:23 AM
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🏢 **DATABASE STATUS**
+Status: ✅ Healthy
+Connection: Connected
+Total Records: 557
+
+Recent Activity (24h):
+• New Items: 491
+• Approved: 0
+
+Table Breakdown:
+• news_items: 493
+• events: 1
+• alerts: 5
+• jobs: 1
+• candidates: 17
+• resources: 40
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🤖 **AGENT STATUS REPORT**
+
+**Data Collection**
+
+⏸️ Idle Social Media Monitor
+├─ Purpose: Monitors news sources across Wilkes County and surrounding c...
+├─ Schedule: Every hour
+├─ Last Run: Unknown
+└─ Items: 0
+
+⏸️ Idle Deep Research Agent
+├─ Purpose: Discovers and catalogs community resources, government offic...
+├─ Schedule: Every 4 hours
+├─ Last Run: Unknown
+└─ Items: 0
+
+**Election Data**
+
+⏸️ Idle Election Research Agent
+├─ Purpose: Gathers comprehensive information on candidates and election...
+├─ Schedule: Every 6 hours
+├─ Last Run: Unknown
+└─ Items: 0
+
+**Employment**
+
+⏸️ Idle Jobs Monitor
+├─ Purpose: Checks job boards for employment opportunities in the region...
+├─ Schedule: Daily
+├─ Last Run: Unknown
+└─ Items: 0
+
+**Quality Assurance**
+
+⏸️ Idle Code Review Agent
+├─ Purpose: Scans code for security issues, performance problems, and qu...
+├─ Schedule: Daily
+├─ Last Run: Unknown
+└─ Items: 0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 **PENDING ACTIONS**
+• New items awaiting review: 0
+• Items to send to Telegram: 0
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 **RECOMMENDATIONS**
+• Review and approve pending items via Telegram
+• Monitor website build status
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Reply with:
+/report - Full detailed report
+/approve - View pending approvals
+/status - Quick status check
