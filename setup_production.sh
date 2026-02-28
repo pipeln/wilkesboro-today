@@ -57,8 +57,11 @@ cat > $CRON_FILE << 'EOF'
 # Daily cleanup at 3 AM
 0 3 * * * cd /root/.openclaw/workspace && python3 cleanup_data.py >> logs/cron_cleanup.log 2>&1
 
+# Business reports - 8 AM, 12 PM, 4 PM, 8 PM
+0 8,12,16,20 * * * cd /root/.openclaw/workspace && python3 reporting_agent.py >> logs/cron_report.log 2>&1
+
 # Weekly report on Sundays at 8 AM
-0 8 * * 0 cd /root/.openclaw/workspace && python3 generate_report.py >> logs/cron_report.log 2>&1
+0 8 * * 0 cd /root/.openclaw/workspace && python3 reporting_agent.py >> logs/cron_report.log 2>&1
 EOF
 
 # Install cron jobs
@@ -70,7 +73,8 @@ echo ""
 echo "   Schedule:"
 echo "   - Every 4 hours: Data collection → Telegram approval → Website build"
 echo "   - Daily 3 AM: Data cleanup"
-echo "   - Weekly Sunday 8 AM: Analytics report"
+echo "   - 4x Daily: Business reports (8AM, 12PM, 4PM, 8PM)"
+echo "   - Weekly Sunday 8 AM: Full analytics report"
 
 # Create log directory
 echo ""
